@@ -1,5 +1,6 @@
+package Problem;
+
 import java.io.*;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -8,7 +9,7 @@ public class Problem {
     private InputStream file;
     private int boundary;
     public Problem(){
-        file=getClass().getResourceAsStream("test1_4_20.txt");
+        file=getClass().getResourceAsStream("main/resources/test1_4_20.txt");
         this.initialize();
     }
     public void setFile(String file){

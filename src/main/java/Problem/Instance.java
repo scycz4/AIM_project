@@ -1,3 +1,5 @@
+package Problem;
+
 public class Instance {
     public int getProfit() {
         return profit;
