@@ -58,8 +58,4 @@ public class Problem {
         }
         return value;
     }
-
-    public static void main(String[] args) {
-        Problem problem=new Problem();
-    }
 }
