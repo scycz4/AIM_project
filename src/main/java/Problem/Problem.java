@@ -7,9 +7,19 @@ import java.util.Iterator;
 public class Problem {
     private ArrayList<Instance> instance;
     private InputStream file;
+
+    public int getBoundary() {
+        return boundary;
+    }
+
+    public void setBoundary(int boundary) {
+        this.boundary = boundary;
+    }
+
     private int boundary;
     public Problem(){
-        file=getClass().getResourceAsStream("main/resources/test1_4_20.txt");
+        file=getClass().getClassLoader().getResourceAsStream("test1_4_20.txt");
+
         this.initialize();
     }
     public void setFile(String file){
@@ -56,6 +66,23 @@ public class Problem {
             Instance i=it.next();
             int judge=i.isState()?1:0;
             value+=judge*i.getProfit();
+        }
+        return value;
+    }
+
+    public void bitFlip(int index){
+        Instance i=instance.get(index);
+        i.setState(!i.isState());
+        instance.set(index,i);
+    }
+
+    public int getWeight(){
+        int value=0;
+        Iterator<Instance> it=this.instance.iterator();
+        while(it.hasNext()){
+            Instance i=it.next();
+            int judge=i.isState()?1:0;
+            value+=judge*i.getWeight();
         }
         return value;
     }
