@@ -13,7 +13,7 @@ public class Problem {
     private int[] memeStates;
 
     public Problem(){
-        file=getClass().getClassLoader().getResourceAsStream("test1_4_20.txt");
+        file=getClass().getClassLoader().getResourceAsStream("test2_10_269.txt");
         solutions=new Solution[2];
         initialize();
     }
@@ -167,5 +167,13 @@ public class Problem {
         } else {
             this.fatal("Origin Index [" + child1 + "] does not exist.");
         }
+    }
+
+    public int translateMaxToMinValue(){
+        int value=0;
+        for(int i=0;i<getNumberOfVariables();i++){
+            value+=solutions[0].getInstance()[i].getProfit();
+        }
+        return value-solutions[0].getObjectiveValue();
     }
 }
