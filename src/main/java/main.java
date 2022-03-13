@@ -31,6 +31,6 @@ public class main {
         while(System.currentTimeMillis()<end){
             simulatedAnneal.applyHeuristic();
         }
-        System.out.println(problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX));
+        System.out.println(problem.getBestSolutionValue());
     }
 }

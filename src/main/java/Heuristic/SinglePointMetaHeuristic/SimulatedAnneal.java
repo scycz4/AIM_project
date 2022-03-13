@@ -38,5 +38,8 @@ public class SimulatedAnneal{
         }
 
         coolingSchedule.advanceTemperature();
+        if(coolingSchedule.getCurrentTemperature()<1){
+            coolingSchedule.reHeat();
+        }
     }
 }
