@@ -2,23 +2,19 @@ package Heuristic.HillClimb;
 
 import Heuristic.HeuristicMethods;
 import Problem.Problem;
+import Problem.Solution;
 
 public class SteepestHC extends HeuristicMethods {
-    public SteepestHC(){
-        super();
-    }
-
-
     @Override
     public void applyHeuristic(Problem problem) {
-        double bestEval= problem.getObjectiveFunctionValue();
+        double bestEval= problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX);
         boolean improved=false;
         int bestIndex=-1;
-        int len=problem.getSolutionAsString().length();
+        int len=problem.getNumberOfVariables(CURRENT_SOLUTION_INDEX);
         for(int j=0;j<len;j++){
             problem.bitFlip(j);
-            double tmpEval=problem.getObjectiveFunctionValue();
-            if(tmpEval>bestEval&&problem.getWeight()<=problem.getBoundary()){
+            double tmpEval=problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX);
+            if(tmpEval>bestEval&&problem.getWeight(CURRENT_SOLUTION_INDEX)<=problem.getBoundary(CURRENT_SOLUTION_INDEX)){
                 bestIndex=j;
                 bestEval=tmpEval;
                 improved=true;

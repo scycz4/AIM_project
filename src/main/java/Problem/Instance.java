@@ -36,7 +36,9 @@ public class Instance {
     }
 
     public Instance(){
-
+        this.profit=profit;
+        this.weight=weight;
+        state=false;
     }
 
     public void bitFlip(){
