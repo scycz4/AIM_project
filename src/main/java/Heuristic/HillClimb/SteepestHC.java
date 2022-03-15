@@ -14,7 +14,7 @@ public class SteepestHC extends HeuristicMethods {
         for(int j=0;j<len;j++){
             problem.bitFlip(j);
             double tmpEval=problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX);
-            if(tmpEval>bestEval&&problem.getWeight(CURRENT_SOLUTION_INDEX)<=problem.getBoundary(CURRENT_SOLUTION_INDEX)){
+            if(tmpEval>bestEval){
                 bestIndex=j;
                 bestEval=tmpEval;
                 improved=true;

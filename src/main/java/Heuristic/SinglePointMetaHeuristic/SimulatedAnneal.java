@@ -31,7 +31,7 @@ public class SimulatedAnneal{
         double r = random.nextDouble();
 
         double pValue = Math.exp(delta / coolingSchedule.getCurrentTemperature());
-        if ((delta > 0 || r < pValue)&&problem.getWeight(CURRENT_SOLUTION_INDEX)<problem.getBoundary(CURRENT_SOLUTION_INDEX)) {
+        if ((delta > 0 || r < pValue)) {
             problem.copySolution(CURRENT_SOLUTION_INDEX, BACKUP_SOLUTION_INDEX);
         } else {
             problem.copySolution(BACKUP_SOLUTION_INDEX, CURRENT_SOLUTION_INDEX);

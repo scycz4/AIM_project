@@ -13,20 +13,12 @@ public class DavisBitHC extends HeuristicMethods {
         for(int j=0;j<problem.getNumberOfVariables(CURRENT_SOLUTION_INDEX);j++){
             problem.bitFlip(CURRENT_SOLUTION_INDEX,perm[j]);
             int tmpEval=problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX);
-//            System.out.print(problem.getSolutionAsString(CURRENT_SOLUTION_INDEX));
-//            System.out.print(" profit:"+problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX));
-//            System.out.println(" weight:"+problem.getWeight(CURRENT_SOLUTION_INDEX));
-            if(tmpEval>=bestEval&&problem.getWeight(CURRENT_SOLUTION_INDEX)<=problem.getBoundary(CURRENT_SOLUTION_INDEX)){
+            if(tmpEval>=bestEval){
                 bestEval=tmpEval;
             }
             else{
                 problem.bitFlip(CURRENT_SOLUTION_INDEX,perm[j]);
-
-//                System.out.print(problem.getSolutionAsString(CURRENT_SOLUTION_INDEX));
-//                System.out.println(" "+problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX));
-
             }
-//            System.out.println();
         }
     }
 
