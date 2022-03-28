@@ -13,14 +13,13 @@ public class Problem {
     private int[] memeStates;
 
     private Solution bestEverSolution;
-    private int bestEverObjectiveFunction=0;
 
     public Problem(){
         file=getClass().getClassLoader().getResourceAsStream("test2_10_269.txt");
         solutions=new Solution[2];
         initialize();
 
-        for(int i=0;i<solutions.length;i++){
+        for(int i=0;i<solutions.length-1;i++){
             initializeSolution(i,solutions[i].deepCopy().getInstance(),solutions[i].deepCopy().getBoundary());
             while(this.solutions[i].getWeight()>this.solutions[i].getBoundary()){
                 initializeSolution(i,solutions[i].deepCopy().getInstance(),solutions[i].deepCopy().getBoundary());
@@ -29,7 +28,7 @@ public class Problem {
     }
 
     public Problem(int populationSize,int numberOfMemes,int[] memeStates){
-        file=getClass().getClassLoader().getResourceAsStream("test2_10_269.txt");
+        file=getClass().getClassLoader().getResourceAsStream("test3_20_879.txt");
         solutions=new Solution[populationSize];
         this.memeStates=memeStates;
         this.numberOfMemes=numberOfMemes;
@@ -63,7 +62,6 @@ public class Problem {
                 initializeSolution(i,instances,boundary);
             }
         }
-        bestEverSolution=solutions[new Random().nextInt(solutions.length)].deepCopy();
     }
 
     private void initializeSolution(int i, Instance[] instances, int boundary) {
@@ -73,7 +71,13 @@ public class Problem {
             is[j].setState(new Random().nextBoolean());
         }
         this.solutions[i].setInstance(is);
-        getObjectiveFunctionValue(i);
+        if(bestEverSolution==null){
+            bestEverSolution=this.solutions[i].deepCopy();
+        }
+        if(this.solutions[i].getObjectiveValue()>=bestEverSolution.getObjectiveValue()){
+            this.bestEverSolution=this.solutions[i].deepCopy();
+        }
+
     }
 
 
@@ -97,8 +101,6 @@ public class Problem {
             Solution solution=new Solution(instances,boundary,0,null);
             solutions[0]=solution;
             solutions[1]=solution.deepCopy();
-            bestEverSolution=solution.deepCopy();
-            bestEverObjectiveFunction=bestEverSolution.getObjectiveValue();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -128,7 +130,7 @@ public class Problem {
     }
 
     public int getBestSolutionValue(){
-        return bestEverObjectiveFunction;
+        return bestEverSolution.getObjectiveValue();
     }
 
     public void bitFlip(int index){
@@ -137,9 +139,8 @@ public class Problem {
 
     public void bitFlip(int memoryIndex,int index){
         solutions[memoryIndex].bitFlip(index);
-        if(solutions[memoryIndex].getObjectiveValue()>bestEverObjectiveFunction&&solutions[memoryIndex].getWeight()<=solutions[memoryIndex].getBoundary()){
+        if(solutions[memoryIndex].getObjectiveValue()>bestEverSolution.getObjectiveValue()&&solutions[memoryIndex].getWeight()<=solutions[memoryIndex].getBoundary()){
             bestEverSolution=solutions[memoryIndex].deepCopy();
-            bestEverObjectiveFunction=solutions[memoryIndex].getObjectiveValue();
         }
     }
 
