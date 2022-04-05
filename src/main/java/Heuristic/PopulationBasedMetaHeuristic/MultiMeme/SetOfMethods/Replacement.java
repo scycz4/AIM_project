@@ -1,4 +1,4 @@
-package Heuristic.PopulationBasedMetaHeuristic;
+package Heuristic.PopulationBasedMetaHeuristic.MultiMeme.SetOfMethods;
 
 import Problem.Problem;
 

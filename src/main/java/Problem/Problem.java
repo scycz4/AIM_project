@@ -14,9 +14,19 @@ public class Problem {
 
     private Solution bestEverSolution;
 
+    private long totalEvaluations;
+    private final long MAX_EVALUATIONS;
+    private final long[] SIXTY_SECONDS_EVALUATIONS;
+
+
     public Problem(){
-        file=getClass().getClassLoader().getResourceAsStream("test2_10_269.txt");
+        file=getClass().getClassLoader().getResourceAsStream("hidden5_23_10000.txt");
         solutions=new Solution[2];
+
+        this.totalEvaluations=0L;
+        this.SIXTY_SECONDS_EVALUATIONS=new long[]{1873579L, 1201680L, 1068678L, 2171053L, 1862364L, 1660721L, 5666442L, 5155633L, 3994215L, 2889132L, 2534306L, 4284292L};
+        this.MAX_EVALUATIONS=(long)((double)this.SIXTY_SECONDS_EVALUATIONS[new Random().nextInt(SIXTY_SECONDS_EVALUATIONS.length)]*((double)Integer.MAX_VALUE/60.0D));
+
         initialize();
 
         for(int i=0;i<solutions.length-1;i++){
@@ -28,10 +38,14 @@ public class Problem {
     }
 
     public Problem(int populationSize,int numberOfMemes,int[] memeStates){
-        file=getClass().getClassLoader().getResourceAsStream("test3_20_879.txt");
+        file=getClass().getClassLoader().getResourceAsStream("hidden5_23_10000.txt");
         solutions=new Solution[populationSize];
         this.memeStates=memeStates;
         this.numberOfMemes=numberOfMemes;
+        this.totalEvaluations=0L;
+        this.SIXTY_SECONDS_EVALUATIONS=new long[]{1873579L, 1201680L, 1068678L, 2171053L, 1862364L, 1660721L, 5666442L, 5155633L, 3994215L, 2889132L, 2534306L, 4284292L};
+        this.MAX_EVALUATIONS=(long)((double)this.SIXTY_SECONDS_EVALUATIONS[new Random().nextInt(SIXTY_SECONDS_EVALUATIONS.length)]*((double)Integer.MAX_VALUE/60.0D));
+
         int boundary=0;
         Instance[] instances = null;
         try {
@@ -126,6 +140,7 @@ public class Problem {
     }
 
     public int getObjectiveFunctionValue(int index){
+        this.totalEvaluations++;
         return solutions[index].getObjectiveValue();
     }
 
@@ -230,6 +245,32 @@ public class Problem {
             }
 
             this.solutions=newPopulation;
+        }
+    }
+
+    public long getElapsedTime(){
+        return this.totalEvaluations;
+    }
+
+    public long getMaxTime(){
+        return this.MAX_EVALUATIONS;
+    }
+
+    public boolean hasTimeExpired(){
+        return this.totalEvaluations>=this.MAX_EVALUATIONS;
+    }
+
+    public int getNumberOfMemes(){
+        return this.numberOfMemes;
+    }
+
+    public Meme getMeme(int solutionIndex,int memeNumber){
+        if(solutionIndex<this.solutions.length&&memeNumber<this.getNumberOfMemes()){
+            return this.solutions[solutionIndex].getMeme(memeNumber);
+        }
+        else{
+            this.fatal("solution index or meme number exceeded the total number of solutions or memes!");
+            return null;
         }
     }
 }

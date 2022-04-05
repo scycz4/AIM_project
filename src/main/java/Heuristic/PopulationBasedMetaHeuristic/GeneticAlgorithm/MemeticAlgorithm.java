@@ -2,11 +2,9 @@ package Heuristic.PopulationBasedMetaHeuristic.GeneticAlgorithm;
 
 import Heuristic.Crossover.CrossoverHeuristic;
 import Heuristic.PopulationBasedMetaHeuristic.PopulationHeuristic;
-import Heuristic.PopulationBasedMetaHeuristic.Replacement;
-import Heuristic.PopulationBasedMetaHeuristic.TournamentSelection;
+import Heuristic.PopulationBasedMetaHeuristic.MultiMeme.SetOfMethods.Replacement;
+import Heuristic.PopulationBasedMetaHeuristic.MultiMeme.SetOfMethods.TournamentSelection;
 import Problem.Problem;
-
-import java.util.Random;
 
 public class MemeticAlgorithm extends PopulationBasedSearchMethod{
     private final CrossoverHeuristic crossover;

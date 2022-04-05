@@ -18,8 +18,8 @@ public class Meme {
     private int option;
     private int iMaxNumberOfStates;
 
-    public Meme(int defaulState,int numberOfStates){
-        option=defaulState;
+    public Meme(int defaultState,int numberOfStates){
+        option=defaultState;
         iMaxNumberOfStates=numberOfStates;
     }
 

@@ -111,4 +111,8 @@ public class Solution {
 
         return new Solution(instances,this.boundary,memes,this.memeStates);
     }
+
+    public Meme getMeme(int memeNumber){
+        return this.memes[memeNumber];
+    }
 }

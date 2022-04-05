@@ -1,6 +1,5 @@
 package Heuristic.PopulationBasedMetaHeuristic.GeneticAlgorithm;
 
-import Heuristic.PopulationBasedMetaHeuristic.PopulationHeuristic;
 import Problem.Problem;
 
 import java.util.Random;

@@ -1,33 +1,39 @@
-package Heuristic.PopulationBasedMetaHeuristic;
+package Heuristic.PopulationBasedMetaHeuristic.MultiMeme.SetOfMethods;
 
+import Heuristic.PopulationBasedMetaHeuristic.PopulationHeuristic;
 import Problem.Problem;
 
 import java.util.Random;
 import java.util.stream.IntStream;
 
-public class DavisBitHCIE extends PopulationHeuristic {
-    public DavisBitHCIE(Problem problem){
+public abstract class DBHC extends PopulationHeuristic {
+    public DBHC(Problem problem){
         super(problem,new Random());
     }
-
     @Override
-    public void applyHeuristic(int memoryIndex) {
-        int bestEval=problem.getObjectiveFunctionValue(memoryIndex);
+    public void applyHeuristic(int index) {
         int[] indices= IntStream.range(0,problem.getNumberOfVariables()).toArray();
         int[] perm=shuffle(indices,random);
 
-        for(int index=0;index<problem.getNumberOfVariables();index++){
-            problem.bitFlip(memoryIndex,perm[index]);
-            int tempEval=problem.getObjectiveFunctionValue(memoryIndex);
+        int currentCost=this.problem.getObjectiveFunctionValue(index);
 
-            if(tempEval>=bestEval){
-                bestEval=tempEval;
-            }
-            else{
-                problem.bitFlip(memoryIndex,perm[index]);
+        for (int j = 0; j < perm.length; j++) {
+
+            this.problem.bitFlip(perm[j], index);
+            int candidateCost = this.problem.getObjectiveFunctionValue(index);
+
+            if (acceptMove(currentCost, candidateCost)) {
+
+                currentCost = candidateCost;
+
+            } else {
+
+                this.problem.bitFlip(perm[j], index);
             }
         }
     }
+
+    public abstract boolean acceptMove(int current,int candidate);
 
     private int[] shuffle(int[] array, Random random) {
         int[] shuffledArray = new int[array.length];
