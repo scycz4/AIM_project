@@ -69,7 +69,7 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
             int p1 = selection.tournamentSelection(tSize);
             int p2 = selection.tournamentSelection(tSize);
 
-            int c1=i+POP_SIZE/2;
+            int c1=i+POP_SIZE;
             int c2=c1+1;
 
             CrossoverHeuristic heuristic=applyCrossoverForChildDependentOnMeme(c1,1);
@@ -105,7 +105,6 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
     }
 
     public void applyLocalSearchForChildDependentOnMeme(int childIndex, int memeIndex) {
-
         // TODO implementation of local search dependent on memes
         lss[problem.getMeme(childIndex,memeIndex).getOption()].applyHeuristic(childIndex);
     }

@@ -176,15 +176,18 @@ public class Problem {
     }
 
     public void copySolution(int originIndex,int destinationIndex){
-        if (originIndex >= 0 && originIndex < this.solutions.length) {
-            if (destinationIndex >= 0 && destinationIndex < this.solutions.length) {
-                Solution solution = this.solutions[originIndex].deepCopy();
-                this.solutions[destinationIndex] = solution;
-            } else {
-                this.fatal("Destination Index [" + destinationIndex + "]  does not exist.");
-            }
+        if(originIndex < 0 || originIndex >= this.solutions.length) {
+
+            fatal("Origin Index [" + originIndex + "] does not exist.");
+
+        } else if(destinationIndex < 0 || destinationIndex >= this.solutions.length) {
+
+            fatal("Destination Index [" + destinationIndex + "]  does not exist.");
+
         } else {
-            this.fatal("Origin Index [" + originIndex + "] does not exist.");
+
+            Solution solution = this.solutions[originIndex].deepCopy();
+            this.solutions[destinationIndex] = solution;
         }
     }
 
@@ -243,7 +246,9 @@ public class Problem {
             for(i=0;i<this.solutions.length;i++){
                 newPopulation[i]=this.solutions[i];
             }
-
+            for(i=solutions.length;i<populationSize;i++){
+                newPopulation[i]=this.solutions[0].deepCopy();
+            }
             this.solutions=newPopulation;
         }
     }

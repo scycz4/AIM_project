@@ -16,16 +16,16 @@ public abstract class SDHC extends PopulationHeuristic {
         int current = candidate;
         int i = -1;
         for (int j = 0; j < this.problem.getNumberOfVariables(); j++) {
-            this.problem.bitFlip(j, index);
+            this.problem.bitFlip(index,j);
             candidate = this.problem.getObjectiveFunctionValue(index);
             if (acceptMove(current, candidate)) {
                 i = j;
                 current = candidate;
             }
-            this.problem.bitFlip(j, index);
+            this.problem.bitFlip(index,j);
         }
         if (i != -1) {
-            this.problem.bitFlip(i, index);
+            this.problem.bitFlip(index,i);
         }
     }
 

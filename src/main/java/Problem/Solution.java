@@ -9,7 +9,7 @@ public class Solution {
     private Instance[] instance;
     private InputStream file;
     private final Meme[] memes;
-    private int[] memeStates=null;
+    private int[] memeStates;
     private int boundary;
 
     public Solution(Instance[] instance,int boundary,int numberOfMemes,int[] memeStates){

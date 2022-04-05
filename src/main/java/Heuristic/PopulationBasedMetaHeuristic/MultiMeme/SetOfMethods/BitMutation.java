@@ -23,6 +23,7 @@ public class BitMutation extends PopulationHeuristic {
     }
 
     public void setMutationRate(int IoM){
-        this.mutationRate =(IoM/this.problem.getNumberOfVariables());
+        double intensityOfMutation=(double)IoM;
+        this.mutationRate =(intensityOfMutation/this.problem.getNumberOfVariables());
     }
 }

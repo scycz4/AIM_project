@@ -19,7 +19,7 @@ public abstract class DBHC extends PopulationHeuristic {
 
         for (int j = 0; j < perm.length; j++) {
 
-            this.problem.bitFlip(perm[j], index);
+            this.problem.bitFlip(index,perm[j]);
             int candidateCost = this.problem.getObjectiveFunctionValue(index);
 
             if (acceptMove(currentCost, candidateCost)) {
@@ -28,7 +28,7 @@ public abstract class DBHC extends PopulationHeuristic {
 
             } else {
 
-                this.problem.bitFlip(perm[j], index);
+                this.problem.bitFlip(index,perm[j]);
             }
         }
     }

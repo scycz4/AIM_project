@@ -68,9 +68,9 @@ public class main {
         Problem problem2=new Problem(16,3,new int[]{5,3,4});
         MultiMemeAlgorithm mma=new MultiMemeAlgorithm(problem2,16,0.2);
 
-        while(!problem2.hasTimeExpired()){
+        for(int i=0;i<1000;i++){
             mma.run();
-            System.out.print("best: "+problem2.getBestSolutionValue() + " " + problem2.getBestSolutionAsString() + " current: ");
+            System.out.println("best: "+problem2.getBestSolutionValue() + " current: " + problem2.getBestSolutionAsString() );
         }
     }
 }
