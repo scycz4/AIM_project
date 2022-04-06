@@ -1,9 +1,9 @@
 package Heuristic.PopulationBasedMetaHeuristic.GeneticAlgorithm;
 
-import Heuristic.Crossover.CrossoverHeuristic;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover.CrossoverHeuristic;
 import Heuristic.PopulationBasedMetaHeuristic.PopulationHeuristic;
-import Heuristic.PopulationBasedMetaHeuristic.MultiMeme.SetOfMethods.Replacement;
-import Heuristic.PopulationBasedMetaHeuristic.MultiMeme.SetOfMethods.TournamentSelection;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.Replacement;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.TournamentSelection;
 import Problem.Problem;
 
 public class MemeticAlgorithm extends PopulationBasedSearchMethod{

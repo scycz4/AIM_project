@@ -9,6 +9,8 @@ public class Problem {
     private Solution[] solutions;
     private InputStream file;
 
+    private String filename;
+
     private int numberOfMemes;
     private int[] memeStates;
 
@@ -18,9 +20,9 @@ public class Problem {
     private final long MAX_EVALUATIONS;
     private final long[] SIXTY_SECONDS_EVALUATIONS;
 
-
     public Problem(){
-        file=getClass().getClassLoader().getResourceAsStream("hidden5_23_10000.txt");
+        filename="hidden5_23_10000.txt";
+        file=getClass().getClassLoader().getResourceAsStream(filename);
         solutions=new Solution[2];
 
         this.totalEvaluations=0L;
@@ -38,8 +40,12 @@ public class Problem {
     }
 
     public Problem(int populationSize,int numberOfMemes,int[] memeStates){
-        file=getClass().getClassLoader().getResourceAsStream("hidden5_23_10000.txt");
+        filename="hidden5_23_10000.txt";
+        file=getClass().getClassLoader().getResourceAsStream(filename);
         solutions=new Solution[populationSize];
+
+        filename=file.toString();
+
         this.memeStates=memeStates;
         this.numberOfMemes=numberOfMemes;
         this.totalEvaluations=0L;
@@ -77,6 +83,11 @@ public class Problem {
             }
         }
     }
+
+    public String getFilename() {
+        return filename;
+    }
+
 
     private void initializeSolution(int i, Instance[] instances, int boundary) {
         this.solutions[i]=new Solution(instances,boundary,numberOfMemes,memeStates);
@@ -139,12 +150,12 @@ public class Problem {
         return solutions[index].getSolutionAsString();
     }
 
-    public int getObjectiveFunctionValue(int index){
+    public double getObjectiveFunctionValue(int index){
         this.totalEvaluations++;
         return solutions[index].getObjectiveValue();
     }
 
-    public int getBestSolutionValue(){
+    public double getBestSolutionValue(){
         return bestEverSolution.getObjectiveValue();
     }
 
@@ -222,7 +233,7 @@ public class Problem {
         }
     }
 
-    public int translateMaxToMinValue(){
+    public double translateMaxToMinValue(){
         int value=0;
         for(int i=0;i<getNumberOfVariables();i++){
             value+=solutions[0].getInstance()[i].getProfit();

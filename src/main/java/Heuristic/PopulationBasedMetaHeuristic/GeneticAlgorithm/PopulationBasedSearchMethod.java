@@ -21,12 +21,12 @@ public abstract class PopulationBasedSearchMethod implements SearchMethod{
     }
 
     @Override
-    public int run() {
+    public double run() {
         runMainLoop();
 
-        int best=Integer.MIN_VALUE;
+        double best=Integer.MIN_VALUE;
         for(int i=0;i<POP_SIZE;i++){
-            int value=problem.getObjectiveFunctionValue(i);
+            double value=problem.getObjectiveFunctionValue(i);
             best=value<best?value:best;
         }
 

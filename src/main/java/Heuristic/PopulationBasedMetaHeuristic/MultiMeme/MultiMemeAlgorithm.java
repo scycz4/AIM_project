@@ -1,14 +1,22 @@
 package Heuristic.PopulationBasedMetaHeuristic.MultiMeme;
 
-import Heuristic.Crossover.CrossoverHeuristic;
-import Heuristic.Crossover.OnePointCrossover;
-import Heuristic.Crossover.PTX1;
-import Heuristic.Crossover.UniformCrossover;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover.CrossoverHeuristic;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover.OnePointCrossover;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover.PTX1;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover.UniformCrossover;
 import Heuristic.PopulationBasedMetaHeuristic.GeneticAlgorithm.PopulationBasedSearchMethod;
-import Heuristic.PopulationBasedMetaHeuristic.MultiMeme.SetOfMethods.*;
 import Heuristic.PopulationBasedMetaHeuristic.PopulationHeuristic;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Inheritance.SimpleInheritanceMethod;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch.DBHC_IE;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch.DBHC_OI;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch.SDHC_IE;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch.SDHC_OI;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.BitMutation;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.Replacement;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.TournamentSelection;
 import Problem.Problem;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
@@ -22,6 +30,9 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
     private final SimpleInheritanceMethod inheritance;
 
     private final PopulationHeuristic[] lss;
+
+    private ArrayList<Double> best=new ArrayList<Double>();
+    private ArrayList<Double> worst=new ArrayList<Double>();
 
     public MultiMemeAlgorithm(Problem problem,int populationSize, double innovationRate, CrossoverHeuristic[] crossoverHeuristic
                 , BitMutation mutation, Replacement replacement, TournamentSelection selection, SimpleInheritanceMethod simpleInheritanceMethod,
@@ -61,6 +72,14 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
         );
     }
 
+    public ArrayList<Double> getBest() {
+        return best;
+    }
+
+    public ArrayList<Double> getWorst() {
+        return worst;
+    }
+
     @Override
     protected void runMainLoop() {
         final int tSize=3;
@@ -90,6 +109,23 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
 
         replacement.doReplacement(problem,POP_SIZE);
 
+        double bestObjValue=problem.getObjectiveFunctionValue(0);
+        double worstObjValue=problem.getObjectiveFunctionValue(0);
+        for(int i=0;i<POP_SIZE;i++){
+            double currentObjValue= problem.getObjectiveFunctionValue(i);
+            System.out.print(currentObjValue);
+            System.out.print(" ");
+            if(bestObjValue<=currentObjValue){
+                bestObjValue=currentObjValue;
+            }
+            if(worstObjValue>=currentObjValue){
+                worstObjValue=currentObjValue;
+            }
+        }
+        System.out.println("\n");
+
+        best.add(bestObjValue);
+        worst.add(worstObjValue);
 
     }
 
