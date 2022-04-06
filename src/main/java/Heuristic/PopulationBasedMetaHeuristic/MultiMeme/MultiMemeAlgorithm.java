@@ -12,6 +12,7 @@ import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch.D
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch.SDHC_IE;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch.SDHC_OI;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.BitMutation;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.RandomBitFlip;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.Replacement;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.RuinRecreate.DestroyHighestSolution;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.RuinRecreate.DestroyLowestSolution;
@@ -20,11 +21,10 @@ import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.TournamentS
 import Problem.Problem;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
     private final double innovationRate;
-    private BitMutation mutation;
+    private PopulationHeuristic[] mutation;
     private final RuinRecreate[] ruinRecreates;
     private final CrossoverHeuristic[] crossover;
     private final Replacement replacement;
@@ -38,7 +38,7 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
     private ArrayList<Integer> worst=new ArrayList<Integer>();
 
     public MultiMemeAlgorithm(Problem problem,int populationSize, double innovationRate, RuinRecreate ruinRecreate[], CrossoverHeuristic[] crossoverHeuristic
-                , BitMutation mutation, Replacement replacement, TournamentSelection selection, SimpleInheritanceMethod simpleInheritanceMethod,
+                , PopulationHeuristic[] mutation, Replacement replacement, TournamentSelection selection, SimpleInheritanceMethod simpleInheritanceMethod,
                               PopulationHeuristic[] lss) {
         super(problem, populationSize);
 
@@ -67,7 +67,10 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
                         new PTX1(problem),
                         new UniformCrossover(problem)
                 },
-                new BitMutation(problem),
+                new PopulationHeuristic[]{
+                        new BitMutation(problem),
+                        new RandomBitFlip(problem)
+                },
                 new Replacement(),
                 new TournamentSelection(problem,populationSize),
                 new SimpleInheritanceMethod(problem),
@@ -139,8 +142,7 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
     public void applyMutationForChildDependentOnMeme(int childIndex, int memeIndex) {
 
         // TODO implementation of mutation embedding intensity of mutation from memes
-        mutation.setMutationRate(problem.getMeme(childIndex,memeIndex).getOption());
-        mutation.applyHeuristic(childIndex);
+        mutation[problem.getMeme(childIndex,memeIndex).getOption()].applyHeuristic(childIndex);
     }
 
     public CrossoverHeuristic applyCrossoverForChildDependentOnMeme(int childIndex,int memeIndex){

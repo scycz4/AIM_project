@@ -60,7 +60,9 @@ public class main {
         for(int trial=0;trial<2;trial++){
             System.out.println("Trial#"+(trial+1));
             //muation, ruin-recreate, crossover, localsearch
-            Problem problem2=new Problem(16,4,new int[]{5,2,3,4});
+            Problem problem2=new Problem(16,4,new int[]{2,2,3,4});
+            problem2.setIntensityOfMutation(0.4);
+            problem2.setDepthOfSearch(0.5);
             MultiMemeAlgorithm mma=new MultiMemeAlgorithm(problem2,16,0.2);
 
             for(int i=0;i<1000;i++){

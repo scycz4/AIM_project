@@ -18,6 +18,9 @@ public class Problem {
     private final long MAX_EVALUATIONS;
     private final long[] SIXTY_SECONDS_EVALUATIONS;
 
+    private int intensityOfMutation;
+    private int depthOfSearch;
+
     public Problem(){
         filename="test1_4_20.txt";
         file=getClass().getClassLoader().getResourceAsStream(filename);
@@ -294,5 +297,45 @@ public class Problem {
             instances[i].setState(false);
         }
         solutions[index].setInstance(instances);
+    }
+
+    public void setIntensityOfMutation(double intensityOfMutation){
+        if(intensityOfMutation>=0.0&&intensityOfMutation<0.2){
+            this.intensityOfMutation=1;
+        }else if(intensityOfMutation<0.4){
+            this.intensityOfMutation=2;
+        }else if(intensityOfMutation<0.6){
+            this.intensityOfMutation=3;
+        }else if(intensityOfMutation<0.8){
+            this.intensityOfMutation=4;
+        }else if(intensityOfMutation<1.0){
+            this.intensityOfMutation=5;
+        }else if(intensityOfMutation==1.0){
+            this.intensityOfMutation=6;
+        }
+    }
+
+    public void setDepthOfSearch(double depthOfSearch){
+        if(depthOfSearch>=0.0&&depthOfSearch<0.2){
+            this.depthOfSearch=1;
+        }else if(depthOfSearch<0.4){
+            this.depthOfSearch=2;
+        }else if(depthOfSearch<0.6){
+            this.depthOfSearch=3;
+        }else if(depthOfSearch<0.8){
+            this.depthOfSearch=4;
+        }else if(depthOfSearch<1.0){
+            this.depthOfSearch=5;
+        }else if(depthOfSearch==1.0){
+            this.depthOfSearch=6;
+        }
+    }
+
+    public int getIntensityOfMutation() {
+        return intensityOfMutation;
+    }
+
+    public int getDepthOfSearch() {
+        return depthOfSearch;
     }
 }

@@ -12,21 +12,28 @@ public abstract class SDHC extends PopulationHeuristic {
 
     @Override
     public void applyHeuristic(int index) {
-        int candidate= this.problem.getObjectiveFunctionValue(index);
-        int current = candidate;
-        int i = -1;
-        for (int j = 0; j < this.problem.getNumberOfVariables(); j++) {
-            this.problem.bitFlip(index,j);
-            candidate = this.problem.getObjectiveFunctionValue(index);
-            if (acceptMove(current, candidate)) {
-                i = j;
-                current = candidate;
+        for(int k=0;k<problem.getDepthOfSearch();k++){
+            int candidate= this.problem.getObjectiveFunctionValue(index);
+            int current = candidate;
+            int origin=current;
+            int i = -1;
+            for (int j = 0; j < this.problem.getNumberOfVariables(); j++) {
+                this.problem.bitFlip(index,j);
+                candidate = this.problem.getObjectiveFunctionValue(index);
+                if (acceptMove(current, candidate)) {
+                    i = j;
+                    current = candidate;
+                }
+                this.problem.bitFlip(index,j);
             }
-            this.problem.bitFlip(index,j);
+            if (i != -1) {
+                this.problem.bitFlip(index,i);
+            }
+            if(origin<=problem.getObjectiveFunctionValue(index)){
+                break;
+            }
         }
-        if (i != -1) {
-            this.problem.bitFlip(index,i);
-        }
+
     }
 
     public abstract boolean acceptMove(int current, int candidate);
