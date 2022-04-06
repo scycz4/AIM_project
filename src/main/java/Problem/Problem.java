@@ -1,8 +1,6 @@
 package Problem;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 
 public class Problem {
@@ -21,7 +19,7 @@ public class Problem {
     private final long[] SIXTY_SECONDS_EVALUATIONS;
 
     public Problem(){
-        filename="hidden5_23_10000.txt";
+        filename="test1_4_20.txt";
         file=getClass().getClassLoader().getResourceAsStream(filename);
         solutions=new Solution[2];
 
@@ -40,7 +38,7 @@ public class Problem {
     }
 
     public Problem(int populationSize,int numberOfMemes,int[] memeStates){
-        filename="hidden5_23_10000.txt";
+        filename="test2_10_269.txt";
         file=getClass().getClassLoader().getResourceAsStream(filename);
         solutions=new Solution[populationSize];
 
@@ -150,12 +148,15 @@ public class Problem {
         return solutions[index].getSolutionAsString();
     }
 
-    public double getObjectiveFunctionValue(int index){
+    public int getObjectiveFunctionValue(int index){
         this.totalEvaluations++;
+        if(solutions[index].getObjectiveValue()>bestEverSolution.getObjectiveValue()&&solutions[index].getWeight()<=solutions[index].getBoundary()){
+            bestEverSolution=solutions[index].deepCopy();
+        }
         return solutions[index].getObjectiveValue();
     }
 
-    public double getBestSolutionValue(){
+    public int getBestSolutionValue(){
         return bestEverSolution.getObjectiveValue();
     }
 
@@ -165,9 +166,6 @@ public class Problem {
 
     public void bitFlip(int memoryIndex,int index){
         solutions[memoryIndex].bitFlip(index);
-        if(solutions[memoryIndex].getObjectiveValue()>bestEverSolution.getObjectiveValue()&&solutions[memoryIndex].getWeight()<=solutions[memoryIndex].getBoundary()){
-            bestEverSolution=solutions[memoryIndex].deepCopy();
-        }
     }
 
     public int getWeight(int index) {

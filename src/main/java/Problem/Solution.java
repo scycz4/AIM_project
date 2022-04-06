@@ -53,15 +53,15 @@ public class Solution {
         return s.toString();
     }
 
-    public double getObjectiveValue(){
-        double value=0;
+    public int getObjectiveValue(){
+        int value=0;
         for(int i=0;i<instance.length;i++){
             Instance is=instance[i];
             int judge=is.isState()?1:0;
             value+=judge*is.getProfit();
         }
         if(getWeight()>getBoundary()){
-            value=-(double)getWeight()/(double)getBoundary();
+            value=-getWeight()/getBoundary();
         }
         return value;
     }

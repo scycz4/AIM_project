@@ -31,8 +31,8 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
 
     private final PopulationHeuristic[] lss;
 
-    private ArrayList<Double> best=new ArrayList<Double>();
-    private ArrayList<Double> worst=new ArrayList<Double>();
+    private ArrayList<Integer> best=new ArrayList<Integer>();
+    private ArrayList<Integer> worst=new ArrayList<Integer>();
 
     public MultiMemeAlgorithm(Problem problem,int populationSize, double innovationRate, CrossoverHeuristic[] crossoverHeuristic
                 , BitMutation mutation, Replacement replacement, TournamentSelection selection, SimpleInheritanceMethod simpleInheritanceMethod,
@@ -72,11 +72,11 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
         );
     }
 
-    public ArrayList<Double> getBest() {
+    public ArrayList<Integer> getBest() {
         return best;
     }
 
-    public ArrayList<Double> getWorst() {
+    public ArrayList<Integer> getWorst() {
         return worst;
     }
 
@@ -107,12 +107,11 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
 
         }
 
-        replacement.doReplacement(problem,POP_SIZE);
 
-        double bestObjValue=problem.getObjectiveFunctionValue(0);
-        double worstObjValue=problem.getObjectiveFunctionValue(0);
+        int bestObjValue=problem.getObjectiveFunctionValue(0);
+        int worstObjValue=problem.getObjectiveFunctionValue(0);
         for(int i=0;i<POP_SIZE;i++){
-            double currentObjValue= problem.getObjectiveFunctionValue(i);
+            int currentObjValue= problem.getObjectiveFunctionValue(i);
             System.out.print(currentObjValue);
             System.out.print(" ");
             if(bestObjValue<=currentObjValue){
@@ -127,6 +126,7 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
         best.add(bestObjValue);
         worst.add(worstObjValue);
 
+        replacement.doReplacement(problem,POP_SIZE);
     }
 
     public void applyMutationForChildDependentOnMeme(int childIndex, int memeIndex) {

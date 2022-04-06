@@ -15,7 +15,7 @@ public class TournamentSelection {
 
     public int tournamentSelection(int tournamentSize){
         int bestIndex=-1;
-        double bestFitness= Integer.MIN_VALUE;
+        int bestFitness= Integer.MIN_VALUE;
 
         int[] indices=new int[POP_SIZE];
         for(int i=0;i<POP_SIZE;i++){
@@ -25,7 +25,7 @@ public class TournamentSelection {
 
         for(int i=0;i<tournamentSize;i++){
             int sol=indices[i];
-            double fitness=problem.getObjectiveFunctionValue(sol);
+            int fitness=problem.getObjectiveFunctionValue(sol);
             if(fitness>=bestFitness){
                 bestFitness=fitness;
                 bestIndex=sol;

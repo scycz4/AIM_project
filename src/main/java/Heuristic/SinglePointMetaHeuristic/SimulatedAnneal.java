@@ -1,6 +1,5 @@
 package Heuristic.SinglePointMetaHeuristic;
 
-import Heuristic.HeuristicMethods;
 import Problem.Problem;
 
 import java.util.Random;
@@ -24,9 +23,9 @@ public class SimulatedAnneal{
         int rndIndex = random.nextInt(len);
         problem.bitFlip(CURRENT_SOLUTION_INDEX, rndIndex);
 
-        double s2 = problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX);
-        double s = problem.getObjectiveFunctionValue(BACKUP_SOLUTION_INDEX);
-        double delta = s2 - s;
+        int s2 = problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX);
+        int s = problem.getObjectiveFunctionValue(BACKUP_SOLUTION_INDEX);
+        int delta = s2 - s;
 
         double r = random.nextDouble();
 

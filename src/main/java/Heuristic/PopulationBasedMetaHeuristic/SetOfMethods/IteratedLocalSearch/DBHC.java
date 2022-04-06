@@ -15,12 +15,12 @@ public abstract class DBHC extends PopulationHeuristic {
         int[] indices= IntStream.range(0,problem.getNumberOfVariables()).toArray();
         int[] perm=shuffle(indices,random);
 
-        double currentCost=this.problem.getObjectiveFunctionValue(index);
+        int currentCost=this.problem.getObjectiveFunctionValue(index);
 
         for (int j = 0; j < perm.length; j++) {
 
             this.problem.bitFlip(index,perm[j]);
-            double candidateCost = this.problem.getObjectiveFunctionValue(index);
+            int candidateCost = this.problem.getObjectiveFunctionValue(index);
 
             if (acceptMove(currentCost, candidateCost)) {
 
@@ -33,7 +33,7 @@ public abstract class DBHC extends PopulationHeuristic {
         }
     }
 
-    public abstract boolean acceptMove(double current, double candidate);
+    public abstract boolean acceptMove(int current, int candidate);
 
     private int[] shuffle(int[] array, Random random) {
         int[] shuffledArray = new int[array.length];

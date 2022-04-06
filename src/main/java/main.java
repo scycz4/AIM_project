@@ -1,21 +1,9 @@
-import Heuristic.PopulationBasedMetaHeuristic.GeneticAlgorithm.MemeticAlgorithm;
-import Heuristic.PopulationBasedMetaHeuristic.GeneticAlgorithm.SearchMethod;
-import Heuristic.PopulationBasedMetaHeuristic.PopulationHeuristic;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover.CrossoverHeuristic;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover.UniformCrossover;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch.DavisBitHCIE;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.BitMutation;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.Replacement;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.TournamentSelection;
 import Heuristic.SinglePointMetaHeuristic.HillClimb.DavisBitHC;
 import Heuristic.SinglePointMetaHeuristic.HillClimb.FirstImprovementHC;
 import Heuristic.SinglePointMetaHeuristic.HillClimb.SteepestHC;
 import Heuristic.PopulationBasedMetaHeuristic.MultiMeme.MultiMemeAlgorithm;
-import Heuristic.SinglePointMetaHeuristic.LundyAndMees;
-import Heuristic.SinglePointMetaHeuristic.SimulatedAnneal;
 import Problem.Problem;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -75,15 +63,16 @@ public class main {
             Problem problem2=new Problem(16,3,new int[]{5,3,4});
             MultiMemeAlgorithm mma=new MultiMemeAlgorithm(problem2,16,0.2);
 
-            for(int i=0;i<10000;i++){
+            for(int i=0;i<1000;i++){
                 mma.run();
             }
+
 
             System.out.println(problem2.getBestSolutionValue());
             System.out.println(problem2.getBestSolutionAsString());
 
-            ArrayList<Double> best=mma.getBest();
-            ArrayList<Double> worst=mma.getWorst();
+            ArrayList<Integer> best=mma.getBest();
+            ArrayList<Integer> worst=mma.getWorst();
 
             String inputFilename= problem.getFilename();
             String[] elementArray=inputFilename.split("_");
