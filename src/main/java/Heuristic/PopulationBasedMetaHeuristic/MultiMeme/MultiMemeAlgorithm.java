@@ -13,6 +13,9 @@ import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch.S
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch.SDHC_OI;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.BitMutation;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.Replacement;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.RuinRecreate.DestroyHighestSolution;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.RuinRecreate.DestroyLowestSolution;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.RuinRecreate.RuinRecreate;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.TournamentSelection;
 import Problem.Problem;
 
@@ -20,9 +23,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
-    private Random random;
     private final double innovationRate;
     private BitMutation mutation;
+    private final RuinRecreate[] ruinRecreates;
     private final CrossoverHeuristic[] crossover;
     private final Replacement replacement;
     private final TournamentSelection selection;
@@ -34,12 +37,13 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
     private ArrayList<Integer> best=new ArrayList<Integer>();
     private ArrayList<Integer> worst=new ArrayList<Integer>();
 
-    public MultiMemeAlgorithm(Problem problem,int populationSize, double innovationRate, CrossoverHeuristic[] crossoverHeuristic
+    public MultiMemeAlgorithm(Problem problem,int populationSize, double innovationRate, RuinRecreate ruinRecreate[], CrossoverHeuristic[] crossoverHeuristic
                 , BitMutation mutation, Replacement replacement, TournamentSelection selection, SimpleInheritanceMethod simpleInheritanceMethod,
                               PopulationHeuristic[] lss) {
         super(problem, populationSize);
 
         this.innovationRate = innovationRate;
+        this.ruinRecreates=ruinRecreate;
         this.crossover = crossoverHeuristic;
         this.mutation = mutation;
         this.replacement = replacement;
@@ -54,6 +58,10 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
                 problem,
                 populationSize,
                 innovationRate,
+                new RuinRecreate[]{
+                        new DestroyHighestSolution(problem),
+                        new DestroyLowestSolution(problem),
+                },
                 new CrossoverHeuristic[]{
                         new OnePointCrossover(problem),
                         new PTX1(problem),
@@ -91,7 +99,9 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
             int c1=i+POP_SIZE;
             int c2=c1+1;
 
-            CrossoverHeuristic heuristic=applyCrossoverForChildDependentOnMeme(c1,1);
+            applyRuinRecreateForChildDependentOnMeme(POP_SIZE);
+
+            CrossoverHeuristic heuristic=applyCrossoverForChildDependentOnMeme(c1,2);
             heuristic.applyHeuristic(p1,p2,c1,c2);
 
             inheritance.performMemeticInheritance(p1,p2,c1,c2);
@@ -102,8 +112,8 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
             applyMutationForChildDependentOnMeme(c1,0);
             applyMutationForChildDependentOnMeme(c2,0);
 
-            applyLocalSearchForChildDependentOnMeme(c1,2);
-            applyLocalSearchForChildDependentOnMeme(c2,2);
+            applyLocalSearchForChildDependentOnMeme(c1,3);
+            applyLocalSearchForChildDependentOnMeme(c2,3);
 
         }
 
@@ -112,8 +122,6 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
         int worstObjValue=problem.getObjectiveFunctionValue(0);
         for(int i=0;i<POP_SIZE;i++){
             int currentObjValue= problem.getObjectiveFunctionValue(i);
-            System.out.print(currentObjValue);
-            System.out.print(" ");
             if(bestObjValue<=currentObjValue){
                 bestObjValue=currentObjValue;
             }
@@ -121,7 +129,6 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
                 worstObjValue=currentObjValue;
             }
         }
-        System.out.println("\n");
 
         best.add(bestObjValue);
         worst.add(worstObjValue);
@@ -158,5 +165,10 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
                 problem.getMeme(solutionIndex,i).setOption(option);
             }
         }
+    }
+
+    public void applyRuinRecreateForChildDependentOnMeme(int populationSize){
+        ruinRecreates[rng.nextInt(ruinRecreates.length)].setIntensityOfMutation(0.3);
+        ruinRecreates[rng.nextInt(ruinRecreates.length)].applyHeuristic(populationSize);
     }
 }

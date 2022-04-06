@@ -287,4 +287,12 @@ public class Problem {
             return null;
         }
     }
+
+    public void reset(int index){
+        Instance[] instances=solutions[index].getInstance();
+        for(int i=0;i<instances.length;i++){
+            instances[i].setState(false);
+        }
+        solutions[index].setInstance(instances);
+    }
 }
