@@ -15,10 +15,11 @@ public class BitMutation extends PopulationHeuristic {
 
     @Override
     public void applyHeuristic(int solutionIndex) {
-        mutationRate= (double)problem.getIntensityOfMutation()/ problem.getNumberOfVariables();
-        for(int j=0;j<problem.getNumberOfVariables();j++){
-            if(random.nextDouble()< mutationRate){
-                problem.bitFlip(solutionIndex,j);
+        for(int i=0;i< problem.getIntensityOfMutation();i++){
+            for(int j=0;j<problem.getNumberOfVariables();j++){
+                if(random.nextDouble()< mutationRate){
+                    problem.bitFlip(solutionIndex,j);
+                }
             }
         }
     }

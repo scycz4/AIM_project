@@ -125,6 +125,10 @@ public class Problem {
         return this.filename;
     }
 
+    public int getNumberOfItems(){
+        return bestEverSolution.getNumberOfInstance();
+    }
+
     private void initializeSolution(int i, Instance[] instances, int boundary, boolean reload) {
         this.solutions[i]=new Solution(instances,boundary,numberOfMemes,memeStates);
         Instance[] is=this.solutions[i].deepCopy().getInstance();

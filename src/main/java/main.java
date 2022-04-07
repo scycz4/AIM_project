@@ -65,7 +65,7 @@ public class main {
         for(int trial=0;trial<2;trial++){
             System.out.println("Trial#"+(trial+1));
             //muation, ruin-recreate, crossover, localsearch
-            problem2=new Problem(16,4,new int[]{2,2,4,4});
+            problem2=new Problem(16,4,new int[]{2,2,3,6});
 
             problem2.loadInstance(filename);
 

@@ -4,10 +4,7 @@ import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover.*;
 import Heuristic.PopulationBasedMetaHeuristic.GeneticAlgorithm.PopulationBasedSearchMethod;
 import Heuristic.PopulationBasedMetaHeuristic.PopulationHeuristic;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Inheritance.SimpleInheritanceMethod;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch.DBHC_IE;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch.DBHC_OI;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch.SDHC_IE;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch.SDHC_OI;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch.*;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.BitMutation;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.RandomBitFlip;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.Replacement;
@@ -61,7 +58,6 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
                 },
                 new CrossoverHeuristic[]{
                         new OnePointCrossover(problem),
-                        new PTX1(problem),
                         new UniformCrossover(problem),
                         new TwoPointCrossover(problem)
                 },
@@ -76,7 +72,9 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
                         new DBHC_OI(problem),
                         new DBHC_IE(problem),
                         new SDHC_OI(problem),
-                        new SDHC_IE(problem)
+                        new SDHC_IE(problem),
+                        new RMHC_OI(problem),
+                        new RMHC_IE(problem)
                 }
         );
     }
