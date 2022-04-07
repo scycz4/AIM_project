@@ -29,7 +29,7 @@ public abstract class SDHC extends PopulationHeuristic {
             if (i != -1) {
                 this.problem.bitFlip(index,i);
             }
-            if(origin<=problem.getObjectiveFunctionValue(index)){
+            if(origin>=problem.getObjectiveFunctionValue(index)){
                 break;
             }
         }

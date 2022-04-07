@@ -32,7 +32,7 @@ public abstract class DBHC extends PopulationHeuristic {
                     this.problem.bitFlip(index,perm[j]);
                 }
             }
-            if(originCost<=problem.getObjectiveFunctionValue(index)){
+            if(originCost>=problem.getObjectiveFunctionValue(index)){
                 break;
             }
         }

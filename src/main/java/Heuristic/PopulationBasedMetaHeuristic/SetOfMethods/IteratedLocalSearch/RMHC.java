@@ -26,7 +26,7 @@ public abstract class RMHC extends PopulationHeuristic {
                 problem.bitFlip(index,point);
             }
 
-            if(origin<=problem.getObjectiveFunctionValue(index)){
+            if(origin>=problem.getObjectiveFunctionValue(index)){
                 break;
             }
         }

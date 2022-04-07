@@ -4,16 +4,13 @@ import Problem.Problem;
 
 import java.util.Random;
 
-public class SimpleInheritanceMethod {
-    private final Problem problem;
-    private final Random random;
-
+public class SimpleInheritanceMethod extends InheritanceMethod{
     public SimpleInheritanceMethod(Problem problem){
-        this.problem=problem;
-        this.random=new Random();
+        super(problem);
     }
 
-    public void performMemeticInheritance(int parent1, int parent2, int child1, int child2) {
+    @Override
+    public void performMemeticInheritance(int parent1, int parent2, int child1, int child2, int populationSize) {
 
         // TODO - implementation of simple inheritance method
         if(problem.getObjectiveFunctionValue(parent1)==problem.getObjectiveFunctionValue(parent2)){
@@ -30,7 +27,7 @@ public class SimpleInheritanceMethod {
                 }
             }
         }
-        else if(problem.getObjectiveFunctionValue(parent1)<problem.getObjectiveFunctionValue(parent2)){
+        else if(problem.getObjectiveFunctionValue(parent1)>problem.getObjectiveFunctionValue(parent2)){
             for(int i=0;i<problem.getNumberOfMemes();i++){
                 this.problem.getMeme(child1,i).setOption(this.problem.getMeme(parent1,i).getOption());
                 this.problem.getMeme(child2,i).setOption(this.problem.getMeme(parent1,i).getOption());
