@@ -1,9 +1,6 @@
 package Heuristic.PopulationBasedMetaHeuristic.MultiMeme;
 
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover.CrossoverHeuristic;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover.OnePointCrossover;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover.PTX1;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover.UniformCrossover;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover.*;
 import Heuristic.PopulationBasedMetaHeuristic.GeneticAlgorithm.PopulationBasedSearchMethod;
 import Heuristic.PopulationBasedMetaHeuristic.PopulationHeuristic;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Inheritance.SimpleInheritanceMethod;
@@ -65,7 +62,8 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
                 new CrossoverHeuristic[]{
                         new OnePointCrossover(problem),
                         new PTX1(problem),
-                        new UniformCrossover(problem)
+                        new UniformCrossover(problem),
+                        new TwoPointCrossover(problem)
                 },
                 new PopulationHeuristic[]{
                         new BitMutation(problem),
@@ -133,6 +131,7 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
             }
         }
 
+
         best.add(bestObjValue);
         worst.add(worstObjValue);
 
@@ -170,7 +169,8 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
     }
 
     public void applyRuinRecreateForChildDependentOnMeme(int populationSize){
-        ruinRecreates[rng.nextInt(ruinRecreates.length)].setIntensityOfMutation(0.3);
-        ruinRecreates[rng.nextInt(ruinRecreates.length)].applyHeuristic(populationSize);
+        int choice=rng.nextInt(ruinRecreates.length);
+        ruinRecreates[choice].setIntensityOfMutation(0.3);
+        ruinRecreates[choice].applyHeuristic(populationSize);
     }
 }

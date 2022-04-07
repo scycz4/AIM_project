@@ -33,9 +33,9 @@ public class Problem {
         initialize();
 
         for(int i=0;i<solutions.length-1;i++){
-            initializeSolution(i,solutions[i].deepCopy().getInstance(),solutions[i].deepCopy().getBoundary());
+            initializeSolution(i,solutions[i].deepCopy().getInstance(),solutions[i].deepCopy().getBoundary(),false);
             while(this.solutions[i].getWeight()>this.solutions[i].getBoundary()){
-                initializeSolution(i,solutions[i].deepCopy().getInstance(),solutions[i].deepCopy().getBoundary());
+                initializeSolution(i,solutions[i].deepCopy().getInstance(),solutions[i].deepCopy().getBoundary(),false);
             }
         }
     }
@@ -45,7 +45,6 @@ public class Problem {
         file=getClass().getClassLoader().getResourceAsStream(filename);
         solutions=new Solution[populationSize];
 
-        filename=file.toString();
 
         this.memeStates=memeStates;
         this.numberOfMemes=numberOfMemes;
@@ -78,26 +77,62 @@ public class Problem {
         }
 
         for(int i=0;i<solutions.length;i++){
-            initializeSolution(i,instances,boundary);
+            initializeSolution(i,instances,boundary,false);
             while(this.solutions[i].getWeight()>this.solutions[i].getBoundary()){
-                initializeSolution(i,instances,boundary);
+                initializeSolution(i,instances,boundary,false);
+            }
+        }
+    }
+
+    public void loadInstance(String filename){
+        this.filename=filename;
+
+        file=getClass().getClassLoader().getResourceAsStream(filename);
+
+        int boundary=0;
+        Instance[] instances = null;
+        try {
+            BufferedReader br=new BufferedReader(new InputStreamReader(file));
+            String s=null;
+            s=br.readLine();
+            String[] instance=s.split(" ");
+            int item=Integer.parseInt(instance[0]);
+            instances=new Instance[item];
+            boundary=Integer.parseInt(instance[1]);
+            int i=0;
+            while((s=br.readLine())!=null){
+                instance=s.split(" ");
+                int profit=Integer.parseInt(instance[0]);
+                int weight=Integer.parseInt(instance[1]);
+                instances[i]=new Instance(profit,weight);
+                i++;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for(int i=0;i<solutions.length;i++){
+            initializeSolution(i,instances,boundary,true);
+            while(this.solutions[i].getWeight()>this.solutions[i].getBoundary()){
+                initializeSolution(i,instances,boundary,true);
             }
         }
     }
 
     public String getFilename() {
-        return filename;
+        return this.filename;
     }
 
-
-    private void initializeSolution(int i, Instance[] instances, int boundary) {
+    private void initializeSolution(int i, Instance[] instances, int boundary, boolean reload) {
         this.solutions[i]=new Solution(instances,boundary,numberOfMemes,memeStates);
         Instance[] is=this.solutions[i].deepCopy().getInstance();
         for(int j=0;j<instances.length;j++){
             is[j].setState(new Random().nextBoolean());
         }
         this.solutions[i].setInstance(is);
-        if(bestEverSolution==null){
+        if(bestEverSolution==null||reload){
             bestEverSolution=this.solutions[i].deepCopy();
         }
         if(this.solutions[i].getObjectiveValue()>=bestEverSolution.getObjectiveValue()){
@@ -132,11 +167,6 @@ public class Problem {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void setFile(String file){
-        this.file=getClass().getResourceAsStream(file);
-        this.initialize();
     }
 
     public String getBestSolutionAsString(){

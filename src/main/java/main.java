@@ -7,10 +7,15 @@ import Problem.Problem;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class main {
     public static void main(String[] args) throws InterruptedException {
+
+        System.out.print("please enter the file name you want to load:");
+        Scanner in=new Scanner(System.in);
+        String filename=in.nextLine();
 
         int CURRENT_SOLUTION_INDEX=0;
         int BACK_UP_SOLUTION_INDEX=1;
@@ -56,27 +61,30 @@ public class main {
 ////        System.out.println(problem1.getBestSolutionValue());
 ////        System.out.println(problem1.getBestSolutionAsString());
 //        }
-
+        Problem problem2;
         for(int trial=0;trial<2;trial++){
             System.out.println("Trial#"+(trial+1));
             //muation, ruin-recreate, crossover, localsearch
-            Problem problem2=new Problem(16,4,new int[]{2,2,3,4});
+            problem2=new Problem(16,4,new int[]{2,2,4,4});
+
+            problem2.loadInstance(filename);
+
             problem2.setIntensityOfMutation(0.4);
             problem2.setDepthOfSearch(0.5);
+
             MultiMemeAlgorithm mma=new MultiMemeAlgorithm(problem2,16,0.2);
 
             for(int i=0;i<1000;i++){
+
                 mma.run();
             }
-
-
             System.out.println(problem2.getBestSolutionValue());
             System.out.println(problem2.getBestSolutionAsString());
 
             ArrayList<Integer> best=mma.getBest();
             ArrayList<Integer> worst=mma.getWorst();
 
-            String inputFilename= problem.getFilename();
+            String inputFilename= problem2.getFilename();
             String[] elementArray=inputFilename.split("_");
             String outputFilename=elementArray[0]+"_"+elementArray[1]+"_"+elementArray[2].split("\\.")[0]+"_trial"+(trial+1)+"_output.txt";
 
