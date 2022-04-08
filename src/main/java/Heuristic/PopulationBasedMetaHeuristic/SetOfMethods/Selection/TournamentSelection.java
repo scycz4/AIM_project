@@ -4,35 +4,14 @@ import Problem.Problem;
 
 import java.util.Random;
 
-public class TournamentSelection {
+public class TournamentSelection extends Selection{
     private int POP_SIZE;
-    private Problem problem;
+    private int tSize;
 
-    public TournamentSelection(Problem problem,int POP_SIZE){
-        this.problem=problem;
+    public TournamentSelection(Problem problem,int POP_SIZE,int tSize){
+        super(problem);
         this.POP_SIZE=POP_SIZE;
-    }
-
-    public int tournamentSelection(int tournamentSize){
-        int bestIndex=-1;
-        int bestFitness= Integer.MIN_VALUE;
-
-        int[] indices=new int[POP_SIZE];
-        for(int i=0;i<POP_SIZE;i++){
-            indices[i]=i;
-        }
-        indices=shuffle(indices,new Random());
-
-        for(int i=0;i<tournamentSize;i++){
-            int sol=indices[i];
-            int fitness=problem.getObjectiveFunctionValue(sol);
-            if(fitness>=bestFitness){
-                bestFitness=fitness;
-                bestIndex=sol;
-            }
-        }
-
-        return bestIndex;
+        this.tSize=tSize;
     }
 
     private int[] shuffle(int[] array, Random random) {
@@ -50,4 +29,30 @@ public class TournamentSelection {
     }
 
 
+    @Override
+    public int applySelection() {
+        int bestIndex=-1;
+        int bestFitness= Integer.MIN_VALUE;
+
+        int[] indices=new int[POP_SIZE];
+        for(int i=0;i<POP_SIZE;i++){
+            indices[i]=i;
+        }
+        indices=shuffle(indices,new Random());
+
+        for(int i=0;i<tSize;i++){
+            int sol=indices[i];
+            int fitness=problem.getObjectiveFunctionValue(sol);
+            if(fitness>=bestFitness){
+                bestFitness=fitness;
+                bestIndex=sol;
+            }
+        }
+
+        return bestIndex;
+    }
+
+    public void setTournamentSize(int tSize){
+        this.tSize=tSize;
+    }
 }

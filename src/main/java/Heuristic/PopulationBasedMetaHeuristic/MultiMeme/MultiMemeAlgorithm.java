@@ -10,9 +10,13 @@ import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch.*
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.BitMutation;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.RandomBitFlip;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.Replacement;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.ReplacementWithElitists;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.ReplacementWithStrongElitists;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.RuinRecreate.DestroyHighestSolution;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.RuinRecreate.DestroyLowestSolution;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.RuinRecreate.RuinRecreate;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.RouletteWheelSelection;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.Selection;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.TournamentSelection;
 import Problem.Problem;
 
@@ -23,8 +27,8 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
     private PopulationHeuristic[] mutation;
     private final RuinRecreate[] ruinRecreates;
     private final CrossoverHeuristic[] crossover;
-    private final Replacement replacement;
-    private final TournamentSelection selection;
+    private final Replacement[] replacement;
+    private final Selection[] selection;
 
     private final InheritanceMethod[] inheritance;
 
@@ -33,8 +37,10 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
     private ArrayList<Integer> best=new ArrayList<Integer>();
     private ArrayList<Integer> worst=new ArrayList<Integer>();
 
-    public MultiMemeAlgorithm(Problem problem,int populationSize, double innovationRate, RuinRecreate ruinRecreate[], CrossoverHeuristic[] crossoverHeuristic
-                , PopulationHeuristic[] mutation, Replacement replacement, TournamentSelection selection, InheritanceMethod[] inheritanceMethod,
+    private static final int tSize=3;
+
+    public MultiMemeAlgorithm(Problem problem, int populationSize, double innovationRate, RuinRecreate ruinRecreate[], CrossoverHeuristic[] crossoverHeuristic
+                , PopulationHeuristic[] mutation, Replacement[] replacement, Selection[] selection, InheritanceMethod[] inheritanceMethod,
                               PopulationHeuristic[] lss) {
         super(problem, populationSize);
 
@@ -67,8 +73,15 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
                         new BitMutation(problem),
                         new RandomBitFlip(problem)
                 },
-                new Replacement(),
-                new TournamentSelection(problem,populationSize),
+                new Replacement[]{
+                        new ReplacementWithStrongElitists(),
+                        new ReplacementWithElitists()
+                },
+                new Selection[]{
+                        new TournamentSelection(problem,populationSize,tSize),
+                        new RouletteWheelSelection(problem,populationSize)
+                },
+
                 new InheritanceMethod[]{
                         new SimpleInheritanceMethod(problem),
                         new BestInheritanceMethod(problem),
@@ -98,12 +111,18 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
     protected void runMainLoop() {
         final int tSize=3;
 
+        int p1,p2,c1,c2;
+        p1=p2=c1=c2=0;
         for(int i=0;i<POP_SIZE;i+=2){
-            int p1 = selection.tournamentSelection(tSize);
-            int p2 = selection.tournamentSelection(tSize);
+            do{
+                p1 = applySelectionForChildDependentOnMeme(p1,6);
+                p2 = applySelectionForChildDependentOnMeme(p2,6);
+//                System.out.println(p1+" "+p2);
+            }while(p1==p2);
 
-            int c1=i+POP_SIZE;
-            int c2=c1+1;
+
+            c1=i+POP_SIZE;
+            c2=c1+1;
 
             applyRuinRecreateForChildDependentOnMeme(POP_SIZE);
 
@@ -139,7 +158,20 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
         best.add(bestObjValue);
         worst.add(worstObjValue);
 
-        replacement.doReplacement(problem,POP_SIZE);
+        applyReplacementForChildDependentOnMeme(problem,POP_SIZE,c1,c2,5);
+    }
+
+    private int applySelectionForChildDependentOnMeme(int parentIndex, int memeIndex) {
+        return selection[problem.getMeme(parentIndex,memeIndex).getOption()].applySelection();
+    }
+
+    private void applyReplacementForChildDependentOnMeme(Problem problem, int pop_size,int c1,int c2,int memeIndex) {
+        if(problem.getObjectiveFunctionValue(c1)>problem.getObjectiveFunctionValue(c2)){
+            replacement[problem.getMeme(c1,memeIndex).getOption()].doReplacement(problem,pop_size);
+        }
+        else{
+            replacement[problem.getMeme(c2,memeIndex).getOption()].doReplacement(problem,pop_size);
+        }
     }
 
     private void applyInheritanceForChildDependentOnMeme(int p1, int p2, int c1, int c2, int pop_size,int memeIndex) {
