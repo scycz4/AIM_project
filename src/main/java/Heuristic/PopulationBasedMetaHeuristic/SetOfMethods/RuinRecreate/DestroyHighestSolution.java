@@ -25,6 +25,7 @@ public class DestroyHighestSolution extends RuinRecreate{
         });
         for(int i=0;i<this.IntensityOfMutation;i++){
             problem.reset(obj[i].i);
+            problem.rebuildSolution(obj[i].i);
         }
 
     }

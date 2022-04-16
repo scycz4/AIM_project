@@ -2,6 +2,7 @@ package Heuristic.PopulationBasedMetaHeuristic.GeneticAlgorithm;
 
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover.CrossoverHeuristic;
 import Heuristic.PopulationBasedMetaHeuristic.PopulationHeuristic;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.Replacement;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.ReplacementWithStrongElitists;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.TournamentSelection;
 import Problem.Problem;
@@ -10,13 +11,13 @@ public class MemeticAlgorithm extends PopulationBasedSearchMethod{
     private final CrossoverHeuristic crossover;
     private final PopulationHeuristic mutation;
     private final PopulationHeuristic localSearch;
-    private final ReplacementWithStrongElitists replacement;
+    private final Replacement replacement;
     private final TournamentSelection selection;
 
     private final int tSize=3;
 
     public MemeticAlgorithm(Problem problem, int populationSize, CrossoverHeuristic crossover,
-                            PopulationHeuristic mutation, PopulationHeuristic localSearch, ReplacementWithStrongElitists replacement) {
+                            PopulationHeuristic mutation, PopulationHeuristic localSearch, Replacement replacement) {
 
         super(problem, populationSize);
 

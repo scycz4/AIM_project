@@ -1,6 +1,11 @@
 package Problem;
 
+import Heuristic.PopulationBasedMetaHeuristic.PopulationHeuristic;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.GreedyHeuristic.LargestGreedyHeuristic;
+
 import java.io.*;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Random;
 
 public class Problem {
@@ -119,6 +124,8 @@ public class Problem {
                 initializeSolution(i,instances,boundary,true);
             }
         }
+        PopulationHeuristic greedyHeuristic=new LargestGreedyHeuristic(this);
+        greedyHeuristic.applyHeuristic(new Random().nextInt(solutions.length));
     }
 
     public String getFilename() {
@@ -142,7 +149,31 @@ public class Problem {
         if(this.solutions[i].getObjectiveValue()>=bestEverSolution.getObjectiveValue()){
             this.bestEverSolution=this.solutions[i].deepCopy();
         }
+    }
 
+    public void rebuildSolution(int index){
+        initializeSolution(index,solutions[index].getInstance(),solutions[index].getBoundary(),false);
+    }
+
+    public int[] getSortedLargestProfitIndexArray(int memoryIndex){
+        Solution solution=solutions[memoryIndex];
+        Instance[] instances=solution.getInstance();
+        IndexValue[] indexValues=new IndexValue[instances.length];
+        for(int i=0;i<instances.length;i++){
+            indexValues[i]=new IndexValue(i,instances[i].getProfit());
+        }
+
+        Arrays.sort(indexValues, new Comparator<IndexValue>() {
+            @Override
+            public int compare(IndexValue o1, IndexValue o2) {
+                return o2.value-o1.value;
+            }
+        });
+        int index[]=new int[indexValues.length];
+        for(int i=0;i<index.length;i++){
+            index[i]=indexValues[i].index;
+        }
+        return index;
     }
 
 
@@ -371,5 +402,14 @@ public class Problem {
 
     public int getDepthOfSearch() {
         return depthOfSearch;
+    }
+
+    class IndexValue{
+        int index;
+        int value;
+        public IndexValue(int index,int value){
+            this.index=index;
+            this.value=value;
+        }
     }
 }

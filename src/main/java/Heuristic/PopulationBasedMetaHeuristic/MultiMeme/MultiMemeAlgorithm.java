@@ -20,6 +20,8 @@ import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.Selection;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.TournamentSelection;
 import Problem.Problem;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
@@ -109,15 +111,12 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
 
     @Override
     protected void runMainLoop() {
-        final int tSize=3;
-
         int p1,p2,c1,c2;
         p1=p2=c1=c2=0;
         for(int i=0;i<POP_SIZE;i+=2){
             do{
                 p1 = applySelectionForChildDependentOnMeme(p1,6);
                 p2 = applySelectionForChildDependentOnMeme(p2,6);
-//                System.out.println(p1+" "+p2);
             }while(p1==p2);
 
 
@@ -141,9 +140,9 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
 
         }
 
-
         int bestObjValue=problem.getObjectiveFunctionValue(0);
         int worstObjValue=problem.getObjectiveFunctionValue(0);
+
         for(int i=0;i<POP_SIZE;i++){
             int currentObjValue= problem.getObjectiveFunctionValue(i);
             if(bestObjValue<=currentObjValue){
@@ -153,8 +152,6 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
                 worstObjValue=currentObjValue;
             }
         }
-
-
         best.add(bestObjValue);
         worst.add(worstObjValue);
 
@@ -192,10 +189,10 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
 
     public void applyCrossoverForChildDependentOnMeme(int p1,int p2,int c1,int c2,int memeIndex){
         int index;
-        if(problem.getObjectiveFunctionValue(c1)>problem.getObjectiveFunctionValue(c2)){
-            index=c1;
+        if(problem.getObjectiveFunctionValue(p1)>problem.getObjectiveFunctionValue(p2)){
+            index=p1;
         }else {
-            index=c2;
+            index=p2;
         }
         crossover[problem.getMeme(index,memeIndex).getOption()].applyHeuristic(p1,p2,c1,c2);
     }

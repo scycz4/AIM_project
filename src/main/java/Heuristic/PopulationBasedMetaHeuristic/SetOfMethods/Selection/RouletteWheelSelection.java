@@ -39,7 +39,6 @@ public class RouletteWheelSelection extends Selection{
                 return indexValues[i].index;
             }
         }
-        System.out.println();
         return 0;
     }
 
