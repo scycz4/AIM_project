@@ -11,4 +11,5 @@ public class NDHC_OI extends NDHC{
     public boolean acceptMove(int current, int candidate) {
         return candidate>current;
     }
+
 }

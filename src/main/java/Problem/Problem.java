@@ -26,10 +26,14 @@ public class Problem {
     private int intensityOfMutation;
     private int depthOfSearch;
 
+    private int[] currentObjectiveValue;
+    boolean[][] flippedIndex;
+
     public Problem(){
         filename="test1_4_20.txt";
         file=getClass().getClassLoader().getResourceAsStream(filename);
         solutions=new Solution[2];
+        currentObjectiveValue=new int[1];
 
         this.totalEvaluations=0L;
         this.SIXTY_SECONDS_EVALUATIONS=new long[]{1873579L, 1201680L, 1068678L, 2171053L, 1862364L, 1660721L, 5666442L, 5155633L, 3994215L, 2889132L, 2534306L, 4284292L};
@@ -42,7 +46,11 @@ public class Problem {
             while(this.solutions[i].getWeight()>this.solutions[i].getBoundary()){
                 initializeSolution(i,solutions[i].deepCopy().getInstance(),solutions[i].deepCopy().getBoundary(),false);
             }
+            currentObjectiveValue[i]=solutions[i].getObjectiveValue();
         }
+        currentObjectiveValue[1]=currentObjectiveValue[0];
+        flippedIndex=new boolean[solutions.length][getNumberOfItems()];
+
     }
 
     public Problem(int populationSize,int numberOfMemes,int[] memeStates){
@@ -56,6 +64,8 @@ public class Problem {
         this.totalEvaluations=0L;
         this.SIXTY_SECONDS_EVALUATIONS=new long[]{1873579L, 1201680L, 1068678L, 2171053L, 1862364L, 1660721L, 5666442L, 5155633L, 3994215L, 2889132L, 2534306L, 4284292L};
         this.MAX_EVALUATIONS=(long)((double)this.SIXTY_SECONDS_EVALUATIONS[new Random().nextInt(SIXTY_SECONDS_EVALUATIONS.length)]*((double)Integer.MAX_VALUE/60.0D));
+
+        currentObjectiveValue=new int[populationSize];
 
         int boundary=0;
         Instance[] instances = null;
@@ -86,7 +96,9 @@ public class Problem {
             while(this.solutions[i].getWeight()>this.solutions[i].getBoundary()){
                 initializeSolution(i,instances,boundary,false);
             }
+            currentObjectiveValue[i]=solutions[i].getObjectiveValue();
         }
+        flippedIndex=new boolean[solutions.length][getNumberOfItems()];
     }
 
     public void loadInstance(String filename){
@@ -123,7 +135,9 @@ public class Problem {
             while(this.solutions[i].getWeight()>this.solutions[i].getBoundary()){
                 initializeSolution(i,instances,boundary,true);
             }
+            currentObjectiveValue[i]=solutions[i].getObjectiveValue();
         }
+        flippedIndex=new boolean[solutions.length][getNumberOfItems()];
         PopulationHeuristic greedyHeuristic=new LargestGreedyHeuristic(this);
         greedyHeuristic.applyHeuristic(new Random().nextInt(solutions.length));
     }
@@ -153,6 +167,11 @@ public class Problem {
 
     public void rebuildSolution(int index){
         initializeSolution(index,solutions[index].getInstance(),solutions[index].getBoundary(),false);
+        while(this.solutions[index].getWeight()>this.solutions[index].getBoundary()){
+            initializeSolution(index,solutions[index].getInstance(),solutions[index].getBoundary(),false);
+        }
+        currentObjectiveValue[index]=solutions[index].getObjectiveValue();
+        Arrays.fill(flippedIndex[index],false);
     }
 
     public int[] getSortedLargestProfitIndexArray(int memoryIndex){
@@ -221,7 +240,9 @@ public class Problem {
         if(solutions[index].getObjectiveValue()>bestEverSolution.getObjectiveValue()&&solutions[index].getWeight()<=solutions[index].getBoundary()){
             bestEverSolution=solutions[index].deepCopy();
         }
-        return solutions[index].getObjectiveValue();
+        currentObjectiveValue[index]=solutions[index].getObjectiveValue();
+        Arrays.fill(flippedIndex[index],false);
+        return currentObjectiveValue[index];
     }
 
     public int getBestSolutionValue(){
@@ -234,6 +255,7 @@ public class Problem {
 
     public void bitFlip(int memoryIndex,int index){
         solutions[memoryIndex].bitFlip(index);
+        flippedIndex[memoryIndex][index]=!flippedIndex[memoryIndex][index];
     }
 
     public int getWeight(int index) {
@@ -265,6 +287,8 @@ public class Problem {
 
             Solution solution = this.solutions[originIndex].deepCopy();
             this.solutions[destinationIndex] = solution;
+            currentObjectiveValue[destinationIndex]=currentObjectiveValue[originIndex];
+            flippedIndex[destinationIndex]=flippedIndex[originIndex].clone();
         }
     }
 
@@ -310,11 +334,14 @@ public class Problem {
     public void setPopulationSize(int populationSize){
         Solution[] newPopulation;
         int i;
+        currentObjectiveValue=new int[populationSize];
+        flippedIndex=new boolean[populationSize][getNumberOfItems()];
         if(populationSize<this.solutions.length){
             newPopulation=new Solution[populationSize];
 
             for(i=0;i<populationSize;i++){
                 newPopulation[i]=this.solutions[i];
+                currentObjectiveValue[i]=newPopulation[i].getObjectiveValue();
             }
             this.solutions=newPopulation;
 
@@ -322,12 +349,15 @@ public class Problem {
             newPopulation=new Solution[populationSize];
             for(i=0;i<this.solutions.length;i++){
                 newPopulation[i]=this.solutions[i];
+                currentObjectiveValue[i]=newPopulation[i].getObjectiveValue();
             }
             for(i=solutions.length;i<populationSize;i++){
                 newPopulation[i]=this.solutions[0].deepCopy();
+                currentObjectiveValue[i]=newPopulation[i].getObjectiveValue();
             }
             this.solutions=newPopulation;
         }
+
     }
 
     public long getElapsedTime(){
@@ -362,6 +392,8 @@ public class Problem {
             instances[i].setState(false);
         }
         solutions[index].setInstance(instances);
+        currentObjectiveValue[index]=getObjectiveFunctionValue(index);
+        Arrays.fill(flippedIndex[index],false);
     }
 
     public void setIntensityOfMutation(double intensityOfMutation){
@@ -402,6 +434,38 @@ public class Problem {
 
     public int getDepthOfSearch() {
         return depthOfSearch;
+    }
+
+    public int deltaEvaluation(int index) {
+        this.totalEvaluations++;
+        int delta=0;
+        Instance[] instances=solutions[index].getInstance();
+        for(int i=0;i<getNumberOfItems();i++){
+            if(flippedIndex[index][i]){
+                if(instances[i].isState()){
+                    delta+=instances[i].getProfit();
+                }
+                else{
+                    delta-=instances[i].getProfit();
+                }
+            }
+        }
+
+        int weight=getWeight(index);
+        int boundary=getBoundary(index);
+
+        if(weight>boundary){
+            currentObjectiveValue[index]=(weight-boundary)/boundary;
+        }
+        else{
+            currentObjectiveValue[index]=currentObjectiveValue[index]+delta;
+        }
+
+        if(currentObjectiveValue[index]>bestEverSolution.getObjectiveValue()){
+            bestEverSolution=solutions[index].deepCopy();
+        }
+        Arrays.fill(flippedIndex[index],false);
+        return currentObjectiveValue[index];
     }
 
     class IndexValue{

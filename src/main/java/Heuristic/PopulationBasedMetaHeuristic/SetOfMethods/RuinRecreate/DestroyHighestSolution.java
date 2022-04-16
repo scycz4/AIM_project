@@ -15,7 +15,7 @@ public class DestroyHighestSolution extends RuinRecreate{
     public void applyHeuristic(int populationSize) {
         IndexValue[] obj=new IndexValue[populationSize];
         for(int i=0;i<populationSize;i++){
-            obj[i]=new IndexValue(i,problem.getWeight(i));
+            obj[i]=new IndexValue(i,problem.getObjectiveFunctionValue(i));
         }
         Arrays.sort(obj, new Comparator<IndexValue>() {
             @Override

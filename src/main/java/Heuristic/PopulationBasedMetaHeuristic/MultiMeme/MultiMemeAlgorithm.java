@@ -34,7 +34,7 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
 
     private final InheritanceMethod[] inheritance;
 
-    private final PopulationHeuristic[] lss;
+    private final HillClimb[] lss;
 
     private ArrayList<Integer> best=new ArrayList<Integer>();
     private ArrayList<Integer> worst=new ArrayList<Integer>();
@@ -43,7 +43,7 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
 
     public MultiMemeAlgorithm(Problem problem, int populationSize, double innovationRate, RuinRecreate ruinRecreate[], CrossoverHeuristic[] crossoverHeuristic
                 , PopulationHeuristic[] mutation, Replacement[] replacement, Selection[] selection, InheritanceMethod[] inheritanceMethod,
-                              PopulationHeuristic[] lss) {
+                              HillClimb[] lss) {
         super(problem, populationSize);
 
         this.innovationRate = innovationRate;
@@ -88,7 +88,7 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
                         new SimpleInheritanceMethod(problem),
                         new BestInheritanceMethod(problem),
                 },
-                new PopulationHeuristic[]{
+                new HillClimb[]{
                         new DBHC_OI(problem),
                         new DBHC_IE(problem),
                         new SDHC_OI(problem),
@@ -111,6 +111,7 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
 
     @Override
     protected void runMainLoop() {
+
         int p1,p2,c1,c2;
         p1=p2=c1=c2=0;
         for(int i=0;i<POP_SIZE;i+=2){
@@ -118,7 +119,6 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
                 p1 = applySelectionForChildDependentOnMeme(p1,6);
                 p2 = applySelectionForChildDependentOnMeme(p2,6);
             }while(p1==p2);
-
 
             c1=i+POP_SIZE;
             c2=c1+1;
@@ -139,7 +139,6 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
             applyLocalSearchForChildDependentOnMeme(c2,3);
 
         }
-
         int bestObjValue=problem.getObjectiveFunctionValue(0);
         int worstObjValue=problem.getObjectiveFunctionValue(0);
 
@@ -219,7 +218,7 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
 
     public void applyRuinRecreateForChildDependentOnMeme(int populationSize){
         int choice=rng.nextInt(ruinRecreates.length);
-        ruinRecreates[choice].setIntensityOfMutation(0.3);
+        ruinRecreates[choice].setIntensityOfMutation(0.4);
         ruinRecreates[choice].applyHeuristic(populationSize);
     }
 }

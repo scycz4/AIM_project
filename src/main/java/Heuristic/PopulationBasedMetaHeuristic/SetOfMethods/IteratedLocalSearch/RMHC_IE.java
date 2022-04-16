@@ -11,4 +11,5 @@ public class RMHC_IE extends RMHC{
     public boolean acceptMove(int current, int candidate) {
         return candidate>=current;
     }
+
 }

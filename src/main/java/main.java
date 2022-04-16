@@ -77,7 +77,6 @@ public class main {
                 MultiMemeAlgorithm mma=new MultiMemeAlgorithm(problem,POP_SIZE,INNOVATION_RATE);
 
                 for(int i=0;i<GENERATION;i++){
-
                     mma.run();
                 }
                 System.out.println(problem.getBestSolutionValue());

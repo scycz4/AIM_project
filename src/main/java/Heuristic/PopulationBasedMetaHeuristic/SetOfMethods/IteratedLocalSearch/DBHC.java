@@ -7,7 +7,7 @@ import de.erichseifert.vectorgraphics2d.eps.EPSProcessor;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-public abstract class DBHC extends PopulationHeuristic {
+public abstract class DBHC extends HillClimb {
     public DBHC(Problem problem){
         super(problem,new Random());
     }
@@ -16,14 +16,11 @@ public abstract class DBHC extends PopulationHeuristic {
         for(int i=0;i<problem.getDepthOfSearch();i++){
             int[] indices= IntStream.range(0,problem.getNumberOfVariables()).toArray();
             int[] perm=shuffle(indices,random);
-
             int currentCost=this.problem.getObjectiveFunctionValue(index);
             int originCost=currentCost;
             for (int j = 0; j < perm.length; j++) {
-
                 this.problem.bitFlip(index,perm[j]);
-                int candidateCost = this.problem.getObjectiveFunctionValue(index);
-
+                int candidateCost = deltaEvaluation(index);
                 if (acceptMove(currentCost, candidateCost)) {
 
                     currentCost = candidateCost;
@@ -33,13 +30,12 @@ public abstract class DBHC extends PopulationHeuristic {
                     this.problem.bitFlip(index,perm[j]);
                 }
             }
-            if(originCost>=problem.getObjectiveFunctionValue(index)){
+            if(originCost>=problem.deltaEvaluation(index)){
                 break;
             }
         }
     }
 
-    public abstract boolean acceptMove(int current, int candidate);
 
     private int[] shuffle(int[] array, Random random) {
         int[] shuffledArray = new int[array.length];

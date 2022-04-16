@@ -11,4 +11,5 @@ public class DBHC_OI extends DBHC{
     public boolean acceptMove(int current, int candidate) {
         return candidate>current;
     }
+
 }

@@ -5,7 +5,7 @@ import Problem.Problem;
 
 import java.util.Random;
 
-public abstract class RMHC extends PopulationHeuristic {
+public abstract class RMHC extends HillClimb {
     public RMHC(Problem problem) {
         super(problem,new Random());
     }
@@ -18,7 +18,7 @@ public abstract class RMHC extends PopulationHeuristic {
 
             int point=random.nextInt(problem.getNumberOfVariables());
             this.problem.bitFlip(index,point);
-            int candidate = this.problem.getObjectiveFunctionValue(index);
+            int candidate = deltaEvaluation(index);
 
             if(acceptMove(current,candidate)){
                 current = candidate;
@@ -26,11 +26,9 @@ public abstract class RMHC extends PopulationHeuristic {
                 problem.bitFlip(index,point);
             }
 
-            if(origin>=problem.getObjectiveFunctionValue(index)){
+            if(origin>=deltaEvaluation(index)){
                 break;
             }
         }
     }
-
-    public abstract boolean acceptMove(int current,int candidate);
 }

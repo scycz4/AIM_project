@@ -33,13 +33,16 @@ public class RouletteWheelSelection extends Selection{
         });
         double prob=0.0;
         double randProb=random.nextDouble();
+
         for(int i=0;i<populationSize;i++){
             prob+=indexValues[i].getFitnessProb();
             if(randProb<prob){
+                IndexValue.totalFitness=0;
                 return indexValues[i].index;
             }
         }
-        return 0;
+        IndexValue.totalFitness=0;
+        return random.nextInt(indexValues.length);
     }
 
     static class IndexValue{
@@ -52,7 +55,7 @@ public class RouletteWheelSelection extends Selection{
         }
 
         public double getFitnessProb(){
-            return (double) current/(double) totalFitness;
+            return (double)current/(double) totalFitness;
         }
 
 
