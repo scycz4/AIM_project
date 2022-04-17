@@ -5,7 +5,7 @@ import Problem.Problem;
 
 import java.util.Random;
 
-public class BitMutation extends PopulationHeuristic {
+public class BitMutation extends Mutation {
 
     private double mutationRate;
     public BitMutation(Problem problem){

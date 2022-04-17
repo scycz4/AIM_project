@@ -4,6 +4,7 @@ import Heuristic.PopulationBasedMetaHeuristic.PopulationHeuristic;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.GreedyHeuristic.LargestGreedyHeuristic;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
@@ -466,6 +467,26 @@ public class Problem {
         }
         Arrays.fill(flippedIndex[index],false);
         return currentObjectiveValue[index];
+    }
+
+    public int[] diffGenePoint(int p1,int p2){
+        ArrayList<Integer> diff=new ArrayList<>();
+        Instance[] ins1=solutions[p1].getInstance();
+        Instance[] ins2=solutions[p2].getInstance();
+
+        for(int i=0;i<getNumberOfItems();i++){
+            if(ins1[i].isState()==ins2[i].isState()){
+                diff.add(i);
+            }
+        }
+
+        int[] diffArray=diff.stream().mapToInt(i->i).toArray();
+        return diffArray;
+    }
+
+    public boolean getLastBitOfSolution(int index){
+        Instance[] instances=solutions[index].getInstance();
+        return instances[instances.length-1].isState();
     }
 
     class IndexValue{

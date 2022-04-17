@@ -5,11 +5,8 @@ import Problem.Problem;
 import java.util.Random;
 
 public class TwoPointCrossover extends CrossoverHeuristic{
-    private Random random;
-    private double CROSSOVER_PROBABILITY=0.95;
     public TwoPointCrossover(Problem problem) {
         super(problem);
-        random=new Random();
     }
 
     @Override

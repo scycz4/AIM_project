@@ -41,8 +41,8 @@ public class main {
         private final int NUM_OF_MEMES=7;
 
         private final int MUTATION=2;
-        private final int RUIN_RECREATE=2;
-        private final int CROSSOVER=3;
+        private final int RUIN_RECREATE=4;
+        private final int CROSSOVER=5;
         private final int LOCAL_SEARCH=8;
         private final int INHERITANCE=2;
         private final int REPLACEMENT=2;
@@ -53,7 +53,7 @@ public class main {
 
         private final double INNOVATION_RATE=0.2;
 
-        private final int GENERATION=1000;
+        private final int GENERATION=2500;
 
         private String filename;
 

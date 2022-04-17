@@ -2,11 +2,12 @@ package Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.RuinRecreate;
 
 import Problem.Problem;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class DestroyLowestSolution extends RuinRecreate{
-    public DestroyLowestSolution(Problem problem) {
+public class DestroyHighestValueSolution extends RuinRecreate{
+    public DestroyHighestValueSolution(Problem problem) {
         super(problem);
     }
 
@@ -19,12 +20,13 @@ public class DestroyLowestSolution extends RuinRecreate{
         Arrays.sort(obj, new Comparator<IndexValue>() {
             @Override
             public int compare(IndexValue o1, IndexValue o2) {
-                return o1.v-o2.v;
+                return o2.v-o1.v;
             }
         });
         for(int i=0;i<this.IntensityOfMutation;i++){
             problem.reset(obj[i].i);
             problem.rebuildSolution(obj[i].i);
         }
+
     }
 }

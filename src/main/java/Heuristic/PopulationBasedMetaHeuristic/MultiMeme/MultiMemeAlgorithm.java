@@ -2,31 +2,27 @@ package Heuristic.PopulationBasedMetaHeuristic.MultiMeme;
 
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover.*;
 import Heuristic.PopulationBasedMetaHeuristic.GeneticAlgorithm.PopulationBasedSearchMethod;
-import Heuristic.PopulationBasedMetaHeuristic.PopulationHeuristic;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Inheritance.BestInheritanceMethod;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Inheritance.InheritanceMethod;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Inheritance.SimpleInheritanceMethod;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch.*;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.BitMutation;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.Mutation;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.RandomBitFlip;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.Replacement;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.ReplacementWithElitists;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.ReplacementWithStrongElitists;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.RuinRecreate.DestroyHighestSolution;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.RuinRecreate.DestroyLowestSolution;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.RuinRecreate.RuinRecreate;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.RuinRecreate.*;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.RouletteWheelSelection;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.Selection;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.TournamentSelection;
 import Problem.Problem;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
     private final double innovationRate;
-    private PopulationHeuristic[] mutation;
+    private Mutation[] mutation;
     private final RuinRecreate[] ruinRecreates;
     private final CrossoverHeuristic[] crossover;
     private final Replacement[] replacement;
@@ -42,7 +38,7 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
     private static final int tSize=3;
 
     public MultiMemeAlgorithm(Problem problem, int populationSize, double innovationRate, RuinRecreate ruinRecreate[], CrossoverHeuristic[] crossoverHeuristic
-                , PopulationHeuristic[] mutation, Replacement[] replacement, Selection[] selection, InheritanceMethod[] inheritanceMethod,
+                , Mutation[] mutation, Replacement[] replacement, Selection[] selection, InheritanceMethod[] inheritanceMethod,
                               HillClimb[] lss) {
         super(problem, populationSize);
 
@@ -63,15 +59,19 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
                 populationSize,
                 innovationRate,
                 new RuinRecreate[]{
-                        new DestroyHighestSolution(problem),
-                        new DestroyLowestSolution(problem),
+                        new DestroyHighestValueSolution(problem),
+                        new DestroyLowestValueSolution(problem),
+                        new DestroyHighestWeightSolution(problem),
+                        new DestroyLowestWeightSolution(problem)
                 },
                 new CrossoverHeuristic[]{
                         new OnePointCrossover(problem),
                         new UniformCrossover(problem),
-                        new TwoPointCrossover(problem)
+                        new TwoPointCrossover(problem),
+                        new ReducedSurrogateCrossover(problem),
+                        new OneBitAdaptiveCrossover(problem)
                 },
-                new PopulationHeuristic[]{
+                new Mutation[]{
                         new BitMutation(problem),
                         new RandomBitFlip(problem)
                 },

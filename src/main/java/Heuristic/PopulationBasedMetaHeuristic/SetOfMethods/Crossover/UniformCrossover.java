@@ -5,11 +5,8 @@ import Problem.Problem;
 import java.util.Random;
 
 public class UniformCrossover extends CrossoverHeuristic{
-    private Random random;
-
     public UniformCrossover(Problem problem) {
         super(problem);
-        random=new Random();
     }
 
     @Override
