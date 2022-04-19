@@ -8,7 +8,7 @@ public class SDHC_IE extends SDHC{
     }
 
     @Override
-    public boolean acceptMove(int current, int candidate) {
+    public boolean acceptMove(double current, double candidate) {
         return candidate>=current;
     }
 }

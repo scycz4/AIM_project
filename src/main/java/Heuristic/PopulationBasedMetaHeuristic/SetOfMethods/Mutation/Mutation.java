@@ -10,7 +10,7 @@ public abstract class Mutation extends PopulationHeuristic {
         super(problem, random);
     }
 
-    public int deltaEvaluation(int index){
+    public double deltaEvaluation(int index){
         return problem.deltaEvaluation(index);
     }
 }

@@ -6,50 +6,51 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class ReplacementWithStrongElitists extends Replacement{
-
-
-    protected int[] getNextGeneration(Problem oProblem, int iPopulationSize) {
-
-        // total population size is size of parent population plus size of offspring population
-        int iTotalPopulationSize = iPopulationSize << 1;
-
-        // offspring indices are from 'populationSize' inclusive to 'populationSize * 2' exclusive.
-        int[] aiOffpsringMemoryIndices = IntStream.range(iPopulationSize, iTotalPopulationSize).toArray();
-
-        // elitism replacing worst offspring with best solution if not in offspring
-        int[] adTotalPopulationCosts = new int[iTotalPopulationSize];
-
-        int dBestSolutionCost = Integer.MIN_VALUE;
-        int dWorstOffspringCost =Integer.MAX_VALUE;
-        int bestIndex = -1;
-        int worstOffspringIndex = -1;
-
-        // evaluate the objective function value (cost) of each solution from both parent and offspring populations
-        for(int iMemoryIndex = 0; iMemoryIndex < iTotalPopulationSize; iMemoryIndex++) {
-
-            int dSolutionCost = oProblem.getObjectiveFunctionValue(iMemoryIndex);
-            adTotalPopulationCosts[iMemoryIndex] = dSolutionCost;
-
-            // update index of best solution, favouring offspring solutions
-            if( dSolutionCost >= dBestSolutionCost ) {
-                dBestSolutionCost = dSolutionCost;
-                bestIndex = iMemoryIndex;
-            }
-
-            // keep track of the worst solution in the offspring population
-            if( iMemoryIndex >= iPopulationSize && dSolutionCost < dWorstOffspringCost) {
-
-                worstOffspringIndex = iMemoryIndex;
-                dWorstOffspringCost = dSolutionCost;
-            }
-        }
-
-        // if best solution is in parent population, replace worst in offspring with best from parents
-        if(bestIndex < iPopulationSize) {
-            aiOffpsringMemoryIndices[worstOffspringIndex - iPopulationSize] = bestIndex;
-        }
-
-        // return array of memory locations for replacement
-        return aiOffpsringMemoryIndices;
+    public ReplacementWithStrongElitists(Problem problem, int populationSize) {
+        super(problem,populationSize);
+    }
+    @Override
+    protected int[] getNextGeneration() {
+//        int totalPopulationSize = populationSize << 1;
+//
+//        // offspring indices are from 'populationSize' inclusive to 'populationSize * 2' exclusive.
+//        int[] totalIndices = IntStream.range(0, totalPopulationSize).toArray();
+//
+//        // elitism replacing worst offspring with best solution if not in offspring
+//        int[] totalPopulationCosts = new int[totalPopulationSize];
+//
+//        int bestSolutionCost = Integer.MIN_VALUE;
+//        int worstOffspringCost =Integer.MAX_VALUE;
+//        int bestIndex = -1;
+//        int worstOffspringIndex = -1;
+//
+//        // evaluate the objective function value (cost) of each solution from both parent and offspring populations
+//        for(int index = 0; index < totalPopulationSize; index++) {
+//
+//            int currentSolution = problem.getObjectiveFunctionValue(index);
+//            totalPopulationCosts[index] = currentSolution;
+//
+//            // update index of best solution, favouring offspring solutions
+//            if( currentSolution >= bestSolutionCost ) {
+//                bestSolutionCost = currentSolution;
+//                bestIndex = index;
+//            }
+//
+//            // keep track of the worst solution in the offspring population
+//            if( index >= populationSize && currentSolution < worstOffspringCost) {
+//
+//                worstOffspringIndex = index;
+//                worstOffspringCost = currentSolution;
+//            }
+//        }
+//
+//        totalIndices[worstOffspringIndex] = bestIndex;
+//
+//        int[] springIndices = Arrays.copyOfRange(totalIndices, populationSize, totalPopulationSize);
+//
+//
+//        // return array of memory locations for replacement
+//        return springIndices;
+        return new ReplacementWithElitists(problem,populationSize).getNextGeneration();
     }
 }

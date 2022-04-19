@@ -12,13 +12,13 @@ public abstract class RMHC extends HillClimb {
 
     @Override
     public void applyHeuristic(int index) {
-        for(int i=0;i<problem.getIntensityOfMutation()*problem.getNumberOfItems();i++){
-            int current=problem.getObjectiveFunctionValue(index);
-            int origin=current;
+        for(int i=0;i<problem.getIntensityOfMutation()*problem.getNumberOfVariables();i++){
+            double current=problem.getObjectiveFunctionValue(index);
+            double origin=current;
 
             int point=random.nextInt(problem.getNumberOfVariables());
             this.problem.bitFlip(index,point);
-            int candidate = deltaEvaluation(index);
+            double candidate = deltaEvaluation(index);
 
             if(acceptMove(current,candidate)){
                 current = candidate;

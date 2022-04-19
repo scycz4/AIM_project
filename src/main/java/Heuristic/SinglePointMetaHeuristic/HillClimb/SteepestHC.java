@@ -6,13 +6,13 @@ import Problem.Problem;
 public class SteepestHC extends HeuristicMethods {
     @Override
     public void applyHeuristic(Problem problem) {
-        int bestEval= problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX);
+        double bestEval= problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX);
         boolean improved=false;
         int bestIndex=-1;
-        int len=problem.getNumberOfVariables(CURRENT_SOLUTION_INDEX);
+        int len=problem.getNumberOfVariables();
         for(int j=0;j<len;j++){
             problem.bitFlip(j);
-            int tmpEval=problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX);
+            double tmpEval=problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX);
             if(tmpEval>bestEval){
                 bestIndex=j;
                 bestEval=tmpEval;

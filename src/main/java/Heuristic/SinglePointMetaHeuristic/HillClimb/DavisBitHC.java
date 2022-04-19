@@ -8,11 +8,11 @@ import java.util.Random;
 public class DavisBitHC extends HeuristicMethods {
     @Override
     public void applyHeuristic(Problem problem) {
-        int bestEval=problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX);
+        double bestEval=problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX);
         int[] perm=createRandomPermutation(problem);
-        for(int j=0;j<problem.getNumberOfVariables(CURRENT_SOLUTION_INDEX);j++){
+        for(int j=0;j<problem.getNumberOfVariables();j++){
             problem.bitFlip(CURRENT_SOLUTION_INDEX,perm[j]);
-            int tmpEval=problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX);
+            double tmpEval=problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX);
             if(tmpEval>=bestEval){
                 bestEval=tmpEval;
             }
@@ -23,7 +23,7 @@ public class DavisBitHC extends HeuristicMethods {
     }
 
     private int[] createRandomPermutation(Problem problem) {
-        int[] arr=new int[problem.getNumberOfVariables(CURRENT_SOLUTION_INDEX)];
+        int[] arr=new int[problem.getNumberOfVariables()];
         for(int i=0;i<arr.length;i++){
             arr[i]=i;
         }

@@ -12,12 +12,12 @@ public abstract class NDHC extends HillClimb{
 
     @Override
     public void applyHeuristic(int index){
-        int bestEval=problem.getObjectiveFunctionValue(index);
-        int origin=bestEval;
+        double bestEval=problem.getObjectiveFunctionValue(index);
+        double origin=bestEval;
         for(int j=0;j<problem.getIntensityOfMutation();j++){
             for(int i=0;i<problem.getNumberOfVariables();i++){
                 problem.bitFlip(index,i);
-                int tmpEval=deltaEvaluation(index);
+                double tmpEval=deltaEvaluation(index);
                 if(acceptMove(bestEval,tmpEval)){
                     bestEval=tmpEval;
                 }else{

@@ -29,6 +29,9 @@ public class TwoPointCrossover extends CrossoverHeuristic{
             if(random.nextDouble()<CROSSOVER_PROBABILITY){
                 for(int i=point1;i<point2;i++){
                     problem.exchangeBits(child1,child2,i);
+                    if(problem.isOverWeight(child1)||problem.isOverWeight(child2)){
+                        problem.exchangeBits(child1,child2,i);
+                    }
                 }
             }
         }

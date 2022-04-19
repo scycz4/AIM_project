@@ -1,19 +1,19 @@
 package Problem;
 
 public class Instance {
-    public int getProfit() {
+    public double getProfit() {
         return profit;
     }
 
-    public void setProfit(int profit) {
+    public void setProfit(double profit) {
         this.profit = profit;
     }
 
-    public int getWeight() {
+    public double getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
     }
 
@@ -25,17 +25,11 @@ public class Instance {
         this.state = state;
     }
 
-    private int profit;
-    private int weight;
+    private double profit;
+    private double weight;
     private boolean state;
 
-    public Instance(int profit,int weight){
-        this.profit=profit;
-        this.weight=weight;
-        state=false;
-    }
-
-    public Instance(){
+    public Instance(double profit,double weight){
         this.profit=profit;
         this.weight=weight;
         state=false;

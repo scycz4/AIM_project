@@ -17,10 +17,10 @@ public class RouletteWheelSelection extends Selection{
 
     @Override
     public int applySelection() {
-        int totalFitness=0;
+        double totalFitness=0;
         IndexValue[] indexValues=new IndexValue[populationSize];
         for(int i=0;i<populationSize;i++){
-            int currentFitness=problem.getObjectiveFunctionValue(i);
+            double currentFitness=problem.getObjectiveFunctionValue(i);
             totalFitness+=currentFitness;
             indexValues[i]=new IndexValue(currentFitness,i);
         }
@@ -28,9 +28,10 @@ public class RouletteWheelSelection extends Selection{
         Arrays.sort(indexValues, new Comparator<IndexValue>() {
             @Override
             public int compare(IndexValue o1, IndexValue o2) {
-                return o2.current-o1.current;
+                return Double.compare(o2.current,o1.current);
             }
         });
+
         double prob=0.0;
         double randProb=random.nextDouble();
 
@@ -46,16 +47,16 @@ public class RouletteWheelSelection extends Selection{
     }
 
     static class IndexValue{
-        private int current;
+        private double current;
         private int index;
-        private static int totalFitness;
-        public IndexValue(int current,int index){
+        private static double totalFitness;
+        public IndexValue(double current,int index){
             this.current=current;
             this.index=index;
         }
 
         public double getFitnessProb(){
-            return (double)current/(double) totalFitness;
+            return current/totalFitness;
         }
 
 

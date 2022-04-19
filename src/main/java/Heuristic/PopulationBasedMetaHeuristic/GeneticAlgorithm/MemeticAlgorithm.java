@@ -3,7 +3,6 @@ package Heuristic.PopulationBasedMetaHeuristic.GeneticAlgorithm;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover.CrossoverHeuristic;
 import Heuristic.PopulationBasedMetaHeuristic.PopulationHeuristic;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.Replacement;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.ReplacementWithStrongElitists;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.TournamentSelection;
 import Problem.Problem;
 
@@ -42,6 +41,6 @@ public class MemeticAlgorithm extends PopulationBasedSearchMethod{
             localSearch.applyHeuristic(POP_SIZE+i*2);
             localSearch.applyHeuristic(POP_SIZE+i*2+1);
         }
-        replacement.doReplacement(problem, POP_SIZE);
+        replacement.doReplacement();
     }
 }

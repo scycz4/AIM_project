@@ -13,9 +13,9 @@ public abstract class SDHC extends HillClimb {
     @Override
     public void applyHeuristic(int index) {
         for(int k=0;k<problem.getDepthOfSearch();k++){
-            int candidate= this.problem.getObjectiveFunctionValue(index);
-            int current = candidate;
-            int origin=current;
+            double candidate= this.problem.getObjectiveFunctionValue(index);
+            double current = candidate;
+            double origin=current;
             int i = -1;
             for (int j = 0; j < this.problem.getNumberOfVariables(); j++) {
                 this.problem.bitFlip(index,j);

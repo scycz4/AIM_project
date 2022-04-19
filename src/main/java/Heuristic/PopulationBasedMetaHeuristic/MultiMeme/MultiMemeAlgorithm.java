@@ -7,12 +7,15 @@ import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Inheritance.Inheritan
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Inheritance.SimpleInheritanceMethod;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch.*;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.BitMutation;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.BoundaryMutation;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.Mutation;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.RandomBitFlip;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.Replacement;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.ReplacementWithElitists;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.ReplacementWithRandomToWorst;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.ReplacementWithStrongElitists;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.ReplacementWithElitists;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.RuinRecreate.*;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.RankBasedSelection;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.RouletteWheelSelection;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.Selection;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.TournamentSelection;
@@ -20,10 +23,11 @@ import Problem.Problem;
 
 import java.util.ArrayList;
 
+import static java.lang.Thread.sleep;
+
 public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
     private final double innovationRate;
     private Mutation[] mutation;
-    private final RuinRecreate[] ruinRecreates;
     private final CrossoverHeuristic[] crossover;
     private final Replacement[] replacement;
     private final Selection[] selection;
@@ -32,18 +36,27 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
 
     private final HillClimb[] lss;
 
-    private ArrayList<Integer> best=new ArrayList<Integer>();
-    private ArrayList<Integer> worst=new ArrayList<Integer>();
+    private ArrayList<Double> best=new ArrayList<Double>();
+    private ArrayList<Double> worst=new ArrayList<Double>();
 
     private static final int tSize=3;
 
-    public MultiMemeAlgorithm(Problem problem, int populationSize, double innovationRate, RuinRecreate ruinRecreate[], CrossoverHeuristic[] crossoverHeuristic
+    private final int MUTATION=0;
+    private final int CROSSOVER=1;
+    private final int LOCAL_SEARCH =2;
+    private final int INHERITANCE=3;
+    private final int REPLACEMENT=4;
+    private final int SELECTION=5;
+
+
+
+
+    public MultiMemeAlgorithm(Problem problem, int populationSize, double innovationRate, CrossoverHeuristic[] crossoverHeuristic
                 , Mutation[] mutation, Replacement[] replacement, Selection[] selection, InheritanceMethod[] inheritanceMethod,
                               HillClimb[] lss) {
         super(problem, populationSize);
 
         this.innovationRate = innovationRate;
-        this.ruinRecreates=ruinRecreate;
         this.crossover = crossoverHeuristic;
         this.mutation = mutation;
         this.replacement = replacement;
@@ -58,12 +71,6 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
                 problem,
                 populationSize,
                 innovationRate,
-                new RuinRecreate[]{
-                        new DestroyHighestValueSolution(problem),
-                        new DestroyLowestValueSolution(problem),
-                        new DestroyHighestWeightSolution(problem),
-                        new DestroyLowestWeightSolution(problem)
-                },
                 new CrossoverHeuristic[]{
                         new OnePointCrossover(problem),
                         new UniformCrossover(problem),
@@ -73,20 +80,29 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
                 },
                 new Mutation[]{
                         new BitMutation(problem),
-                        new RandomBitFlip(problem)
+                        new RandomBitFlip(problem),
+                        new BoundaryMutation(problem),
+                        new DestroyHighestValueSolution(problem),
+                        new DestroyLowestValueSolution(problem),
+                        new DestroyHighestWeightSolution(problem),
+                        new DestroyLowestWeightSolution(problem),
+                        new DestroyHighestProfitDivWeightSolution(problem),
+                        new DestroyLowestProfitDivWeightSolution(problem)
                 },
                 new Replacement[]{
-                        new ReplacementWithStrongElitists(),
-                        new ReplacementWithElitists()
+                        new ReplacementWithElitists(problem,populationSize),
+                        new ReplacementWithStrongElitists(problem,populationSize),
+                        new ReplacementWithRandomToWorst(problem,populationSize)
                 },
                 new Selection[]{
                         new TournamentSelection(problem,populationSize,tSize),
-                        new RouletteWheelSelection(problem,populationSize)
+                        new RouletteWheelSelection(problem,populationSize),
+                        new RankBasedSelection(problem,populationSize)
                 },
 
                 new InheritanceMethod[]{
-                        new SimpleInheritanceMethod(problem),
-                        new BestInheritanceMethod(problem),
+                        new SimpleInheritanceMethod(problem,populationSize),
+                        new BestInheritanceMethod(problem,populationSize)
                 },
                 new HillClimb[]{
                         new DBHC_OI(problem),
@@ -101,11 +117,11 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
         );
     }
 
-    public ArrayList<Integer> getBest() {
+    public ArrayList<Double> getBest() {
         return best;
     }
 
-    public ArrayList<Integer> getWorst() {
+    public ArrayList<Double> getWorst() {
         return worst;
     }
 
@@ -114,36 +130,60 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
 
         int p1,p2,c1,c2;
         p1=p2=c1=c2=0;
+//        for(int i=0;i<POP_SIZE;i++){
+//            System.out.print(problem.getObjectiveFunctionValue(i)+" ");
+//        }
+//        System.out.println();
         for(int i=0;i<POP_SIZE;i+=2){
+//            System.out.print("origin:");
+//            System.out.print(problem.getObjectiveFunctionValue(p1)+" ");
+//            System.out.print(problem.getObjectiveFunctionValue(p2)+" ");
             do{
-                p1 = applySelectionForChildDependentOnMeme(p1,6);
-                p2 = applySelectionForChildDependentOnMeme(p2,6);
+                p1 = applySelectionForChildDependentOnMeme(p1,SELECTION);
+                p2 = applySelectionForChildDependentOnMeme(p2,SELECTION);
             }while(p1==p2);
-
             c1=i+POP_SIZE;
             c2=c1+1;
 
-            applyRuinRecreateForChildDependentOnMeme(POP_SIZE);
+            applyCrossoverForChildDependentOnMeme(p1,p2,c1,c2,CROSSOVER);
+//            System.out.print("crossover:");
+//            System.out.print(problem.getObjectiveFunctionValue(c1)+" ");
+//            System.out.print(problem.getObjectiveFunctionValue(c2)+" ");
 
-            applyCrossoverForChildDependentOnMeme(p1,p2,c1,c2,2);
-
-            applyInheritanceForChildDependentOnMeme(p1,p2,c1,c2,POP_SIZE,4);
+            applyInheritanceForChildDependentOnMeme(p1,p2,c1,c2,INHERITANCE);
 
             performMutationOfMemeplex(c1);
             performMutationOfMemeplex(c2);
 
-            applyMutationForChildDependentOnMeme(c1,0);
-            applyMutationForChildDependentOnMeme(c2,0);
+            applyMutationForChildDependentOnMeme(c1,MUTATION);
+            applyMutationForChildDependentOnMeme(c2,MUTATION);
 
-            applyLocalSearchForChildDependentOnMeme(c1,3);
-            applyLocalSearchForChildDependentOnMeme(c2,3);
+//            System.out.print("mutation:");
+//            System.out.print(problem.getObjectiveFunctionValue(c1)+" ");
+//            System.out.print(problem.getObjectiveFunctionValue(c2)+" ");
+
+
+            applyLocalSearchForChildDependentOnMeme(c1, LOCAL_SEARCH);
+            applyLocalSearchForChildDependentOnMeme(c2, LOCAL_SEARCH);
+
+//            System.out.print("local search:");
+//            System.out.print(problem.getObjectiveFunctionValue(c1)+" ");
+//            System.out.print(problem.getObjectiveFunctionValue(c2)+" ");
+//            System.out.println();
 
         }
-        int bestObjValue=problem.getObjectiveFunctionValue(0);
-        int worstObjValue=problem.getObjectiveFunctionValue(0);
+//        System.out.println();
+//        try {
+//            sleep(1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+        double bestObjValue=problem.getObjectiveFunctionValue(0);
+        double worstObjValue=problem.getObjectiveFunctionValue(0);
 
         for(int i=0;i<POP_SIZE;i++){
-            int currentObjValue= problem.getObjectiveFunctionValue(i);
+            double currentObjValue= problem.getObjectiveFunctionValue(i);
             if(bestObjValue<=currentObjValue){
                 bestObjValue=currentObjValue;
             }
@@ -154,35 +194,44 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
         best.add(bestObjValue);
         worst.add(worstObjValue);
 
-        applyReplacementForChildDependentOnMeme(problem,POP_SIZE,c1,c2,5);
+//        System.out.print("before: ");
+//        for(int i=POP_SIZE;i<POP_SIZE*2;i++){
+//            System.out.print(problem.getObjectiveFunctionValue(i)+" ");
+//        }
+//        System.out.println();
+        applyReplacementForChildDependentOnMeme(c1,c2,REPLACEMENT);
+//        System.out.print("after: ");
+//        for(int i=0;i<POP_SIZE;i++){
+//            System.out.print(problem.getObjectiveFunctionValue(i)+" ");
+//        }
+//        System.out.println();
     }
 
     private int applySelectionForChildDependentOnMeme(int parentIndex, int memeIndex) {
         return selection[problem.getMeme(parentIndex,memeIndex).getOption()].applySelection();
     }
 
-    private void applyReplacementForChildDependentOnMeme(Problem problem, int pop_size,int c1,int c2,int memeIndex) {
+    private void applyReplacementForChildDependentOnMeme(int c1,int c2,int memeIndex) {
         if(problem.getObjectiveFunctionValue(c1)>problem.getObjectiveFunctionValue(c2)){
-            replacement[problem.getMeme(c1,memeIndex).getOption()].doReplacement(problem,pop_size);
+            replacement[problem.getMeme(c1,memeIndex).getOption()].doReplacement();
         }
         else{
-            replacement[problem.getMeme(c2,memeIndex).getOption()].doReplacement(problem,pop_size);
+            replacement[problem.getMeme(c2,memeIndex).getOption()].doReplacement();
         }
     }
 
-    private void applyInheritanceForChildDependentOnMeme(int p1, int p2, int c1, int c2, int pop_size,int memeIndex) {
+    private void applyInheritanceForChildDependentOnMeme(int p1, int p2, int c1, int c2, int memeIndex) {
         int index;
         if(problem.getObjectiveFunctionValue(c1)>problem.getObjectiveFunctionValue(c2)){
             index=c1;
         } else {
             index=c2;
         }
-        inheritance[problem.getMeme(index,memeIndex).getOption()].performMemeticInheritance(p1,p2,c1,c2,pop_size);
+        inheritance[problem.getMeme(index,memeIndex).getOption()].performMemeticInheritance(p1,p2,c1,c2);
     }
 
     public void applyMutationForChildDependentOnMeme(int childIndex, int memeIndex) {
 
-        // TODO implementation of mutation embedding intensity of mutation from memes
         mutation[problem.getMeme(childIndex,memeIndex).getOption()].applyHeuristic(childIndex);
     }
 
@@ -197,28 +246,23 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
     }
 
     public void applyLocalSearchForChildDependentOnMeme(int childIndex, int memeIndex) {
-        // TODO implementation of local search dependent on memes
         lss[problem.getMeme(childIndex,memeIndex).getOption()].applyHeuristic(childIndex);
     }
 
     public void performMutationOfMemeplex(int solutionIndex) {
 
-        // TODO implementation of mutation of memeplex
         for(int i=0;i< problem.getNumberOfMemes();i++){
             if(rng.nextDouble()<innovationRate){
                 int option;
                 do{
                     option=rng.nextInt(problem.getMeme(solutionIndex,i).getTotalOptions());
+                    if(problem.getMeme(solutionIndex,i).getTotalOptions()==1){
+                        break;
+                    }
                 }
                 while(option==problem.getMeme(solutionIndex,i).getOption());
                 problem.getMeme(solutionIndex,i).setOption(option);
             }
         }
-    }
-
-    public void applyRuinRecreateForChildDependentOnMeme(int populationSize){
-        int choice=rng.nextInt(ruinRecreates.length);
-        ruinRecreates[choice].setIntensityOfMutation(0.4);
-        ruinRecreates[choice].applyHeuristic(populationSize);
     }
 }

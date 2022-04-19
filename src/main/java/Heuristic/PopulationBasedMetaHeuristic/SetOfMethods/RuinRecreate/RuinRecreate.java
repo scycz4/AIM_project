@@ -1,13 +1,16 @@
 package Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.RuinRecreate;
 
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.Mutation;
 import Problem.Problem;
 
-public abstract class RuinRecreate {
+import java.util.Random;
+
+public abstract class RuinRecreate extends Mutation {
     protected int IntensityOfMutation;
-    protected Problem problem;
+    protected int[] indices;
 
     public RuinRecreate(Problem problem){
-        this.problem=problem;
+        super(problem,new Random());
     }
 
     public void setIntensityOfMutation(double intensityOfMutation) {
@@ -26,16 +29,18 @@ public abstract class RuinRecreate {
         }
     }
 
-    class IndexValue{
-        final int i;
-        final int v;
+    public abstract void applyHeuristic(int index);
 
-        public IndexValue(int i,int v){
-            this.i=i;
-            this.v=v;
+    protected abstract void ruin(int index);
+    protected void recreate(int index){
+        for(int i=0;i<indices.length;i++){
+            if(random.nextDouble()<0.3){
+                problem.bitFlip(index,indices[i]);
+                if (problem.isOverWeight(index)){
+                    problem.bitFlip(index,indices[i]);
+                }
+            }
         }
     }
-
-    public abstract void applyHeuristic(int populationSize);
 
 }

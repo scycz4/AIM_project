@@ -2,48 +2,55 @@ package Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement;
 
 import Problem.Problem;
 
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class ReplacementWithElitists extends Replacement{
-    @Override
-    protected int[] getNextGeneration(Problem problem, int populationSize) {
-        int iTotalPopulationSize = populationSize << 1;
+    public ReplacementWithElitists(Problem problem, int populationSize) {
+        super(problem,populationSize);
+    }
+    protected int[] getNextGeneration() {
+
+        // total population size is size of parent population plus size of offspring population
+        int totalPopulationSize = populationSize << 1;
 
         // offspring indices are from 'populationSize' inclusive to 'populationSize * 2' exclusive.
-        int[] aiOffpsringMemoryIndices = IntStream.range(populationSize, iTotalPopulationSize).toArray();
+        int[] offspringIndices = IntStream.range(populationSize, totalPopulationSize).toArray();
 
         // elitism replacing worst offspring with best solution if not in offspring
-        int[] adTotalPopulationCosts = new int[iTotalPopulationSize];
+        double[] populationCosts = new double[totalPopulationSize];
 
-        int dBestSolutionCost = Integer.MIN_VALUE;
-        int dWorstOffspringCost =Integer.MAX_VALUE;
+        double bestSolutionCost = Double.NEGATIVE_INFINITY;
+        double worstOffspringCost =Double.POSITIVE_INFINITY;
         int bestIndex = -1;
         int worstOffspringIndex = -1;
 
         // evaluate the objective function value (cost) of each solution from both parent and offspring populations
-        for(int iMemoryIndex = 0; iMemoryIndex < iTotalPopulationSize; iMemoryIndex++) {
+        for(int index = 0; index < totalPopulationSize; index++) {
 
-            int dSolutionCost = problem.getObjectiveFunctionValue(iMemoryIndex);
-            adTotalPopulationCosts[iMemoryIndex] = dSolutionCost;
+            double currentCost = problem.getObjectiveFunctionValue(index);
+            populationCosts[index] = currentCost;
 
             // update index of best solution, favouring offspring solutions
-            if( dSolutionCost >= dBestSolutionCost ) {
-                dBestSolutionCost = dSolutionCost;
-                bestIndex = iMemoryIndex;
+            if( currentCost >= bestSolutionCost ) {
+                bestSolutionCost = currentCost;
+                bestIndex = index;
             }
 
             // keep track of the worst solution in the offspring population
-            if( iMemoryIndex >= populationSize && dSolutionCost < dWorstOffspringCost) {
+            if( index >= populationSize && currentCost < worstOffspringCost) {
 
-                worstOffspringIndex = iMemoryIndex;
-                dWorstOffspringCost = dSolutionCost;
+                worstOffspringIndex = index;
+                worstOffspringCost = currentCost;
             }
         }
 
-        aiOffpsringMemoryIndices[worstOffspringIndex - populationSize] = bestIndex;
-
+        // if best solution is in parent population, replace worst in offspring with best from parents
+        if(bestIndex < populationSize) {
+            offspringIndices[worstOffspringIndex - populationSize] = bestIndex;
+        }
 
         // return array of memory locations for replacement
-        return aiOffpsringMemoryIndices;
+        return offspringIndices;
     }
 }

@@ -13,9 +13,9 @@ public abstract class HillClimb extends PopulationHeuristic {
     @Override
     public abstract void applyHeuristic(int index);
 
-    public abstract boolean acceptMove(int current, int candidate);
+    public abstract boolean acceptMove(double current, double candidate);
 
-    public int deltaEvaluation(int index){
+    public double deltaEvaluation(int index){
         return problem.deltaEvaluation(index);
     }
 }

@@ -13,13 +13,13 @@ public class DavisBitHCIE extends PopulationHeuristic {
 
     @Override
     public void applyHeuristic(int memoryIndex) {
-        int bestEval=problem.getObjectiveFunctionValue(memoryIndex);
+        double bestEval=problem.getObjectiveFunctionValue(memoryIndex);
         int[] indices= IntStream.range(0,problem.getNumberOfVariables()).toArray();
         int[] perm=shuffle(indices,random);
 
         for(int index=0;index<problem.getNumberOfVariables();index++){
             problem.bitFlip(memoryIndex,perm[index]);
-            int tempEval=problem.getObjectiveFunctionValue(memoryIndex);
+            double tempEval=problem.getObjectiveFunctionValue(memoryIndex);
 
             if(tempEval>=bestEval){
                 bestEval=tempEval;

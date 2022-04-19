@@ -8,7 +8,7 @@ public class RMHC_IE extends RMHC{
     }
 
     @Override
-    public boolean acceptMove(int current, int candidate) {
+    public boolean acceptMove(double current, double candidate) {
         return candidate>=current;
     }
 

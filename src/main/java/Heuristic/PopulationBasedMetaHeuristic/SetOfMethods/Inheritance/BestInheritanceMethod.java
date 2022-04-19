@@ -3,12 +3,12 @@ package Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Inheritance;
 import Problem.Problem;
 
 public class BestInheritanceMethod extends InheritanceMethod{
-    public BestInheritanceMethod(Problem problem) {
-        super(problem);
+    public BestInheritanceMethod(Problem problem,int populationSize) {
+        super(problem,populationSize);
     }
 
     @Override
-    public void performMemeticInheritance(int p1, int p2, int c1, int c2,int populationSize) {
+    public void performMemeticInheritance(int p1, int p2, int c1, int c2) {
         int bestIndex=0;
         for(int i=0;i<populationSize;i++){
             if(problem.getObjectiveFunctionValue(bestIndex)<problem.getObjectiveFunctionValue(i)){

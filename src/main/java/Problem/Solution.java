@@ -1,18 +1,14 @@
 package Problem;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 
 public class Solution {
     private Instance[] instance;
-    private InputStream file;
     private final Meme[] memes;
     private int[] memeStates;
-    private int boundary;
+    private double boundary;
 
-    public Solution(Instance[] instance,int boundary,int numberOfMemes,int[] memeStates){
+    public Solution(Instance[] instance,double boundary,int numberOfMemes,int[] memeStates){
         this.instance=instance;
         this.boundary=boundary;
         this.memes=new Meme[numberOfMemes];
@@ -26,15 +22,15 @@ public class Solution {
         }
     }
 
-    private Solution(Instance[] instance,int boundary, Meme[] memes, int[] memeStates) {
+    private Solution(Instance[] instance,double boundary, Meme[] memes, int[] memeStates) {
         this.instance=instance;
         this.boundary=boundary;
         this.memes = memes;
         this.memeStates = memeStates;
     }
 
-    public int getWeight(){
-        int value=0;
+    public double getWeight(){
+        double value=0;
         for(int i=0;i<this.instance.length;i++){
             int judge=this.instance[i].isState()?1:0;
             value+=judge*this.instance[i].getWeight();
@@ -53,8 +49,8 @@ public class Solution {
         return s.toString();
     }
 
-    public int getObjectiveValue(){
-        int value=0;
+    public double getObjectiveValue(){
+        double value=0;
         for(int i=0;i<instance.length;i++){
             Instance is=instance[i];
             int judge=is.isState()?1:0;
@@ -70,11 +66,11 @@ public class Solution {
         return instance.length;
     }
 
-    public int getBoundary() {
+    public double getBoundary() {
         return boundary;
     }
 
-    public void setBoundary(int boundary) {
+    public void setBoundary(double boundary) {
         this.boundary = boundary;
     }
 
@@ -97,8 +93,8 @@ public class Solution {
         Meme[] memes=new Meme[this.memes.length];
 
         for(int i=0;i<this.instance.length;i++){
-            int profit=instance[i].getProfit();
-            int weight=instance[i].getWeight();
+            double profit=instance[i].getProfit();
+            double weight=instance[i].getWeight();
             boolean state=instance[i].isState();
             Instance is=new Instance(profit,weight);
             is.setState(state);

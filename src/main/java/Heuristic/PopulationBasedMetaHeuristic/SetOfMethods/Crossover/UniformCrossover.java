@@ -17,6 +17,9 @@ public class UniformCrossover extends CrossoverHeuristic{
             for (int j = 0; j < problem.getNumberOfVariables(); j++) {
                 if (random.nextDouble() < 0.5) {
                     problem.exchangeBits(child1, child2, j);
+                    if(problem.isOverWeight(child1)||problem.isOverWeight(child2)){
+                        problem.exchangeBits(child1,child2,j);
+                    }
                 }
             }
         }

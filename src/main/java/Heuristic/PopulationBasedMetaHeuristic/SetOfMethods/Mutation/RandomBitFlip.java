@@ -14,7 +14,11 @@ public class RandomBitFlip extends Mutation {
     @Override
     public void applyHeuristic(int index) {
         for(int i=0;i<problem.getIntensityOfMutation();i++){
-            problem.bitFlip(index,random.nextInt(problem.getNumberOfVariables()));
+            int j=random.nextInt(problem.getNumberOfVariables());
+            problem.bitFlip(index,j);
+            if(problem.isOverWeight(index)) {
+                problem.bitFlip(index,j);
+            }
         }
     }
 }

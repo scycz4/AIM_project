@@ -32,7 +32,7 @@ public class TournamentSelection extends Selection{
     @Override
     public int applySelection() {
         int bestIndex=-1;
-        int bestFitness= Integer.MIN_VALUE;
+        double bestFitness= Double.NEGATIVE_INFINITY;
 
         int[] indices=new int[POP_SIZE];
         for(int i=0;i<POP_SIZE;i++){
@@ -42,7 +42,8 @@ public class TournamentSelection extends Selection{
 
         for(int i=0;i<tSize;i++){
             int sol=indices[i];
-            int fitness=problem.getObjectiveFunctionValue(sol);
+            double fitness=problem.getObjectiveFunctionValue(sol);
+
             if(fitness>=bestFitness){
                 bestFitness=fitness;
                 bestIndex=sol;
