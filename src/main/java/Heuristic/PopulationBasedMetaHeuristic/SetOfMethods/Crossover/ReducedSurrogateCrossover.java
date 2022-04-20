@@ -35,7 +35,7 @@ public class ReducedSurrogateCrossover extends CrossoverHeuristic{
                 int point=diff[random.nextInt(diff.length)];
                 if(random.nextDouble()< crossoverProbability){
                     for(int j=0;j<point;j++){
-                        problem.exchangeBits(child1,child2,diff[j]);
+                        problem.exchangeBits(child1,child2,j);
 //                        if(problem.isOverWeight(child1)||problem.isOverWeight(child2)){
 //                            problem.exchangeBits(child1,child2,j);
 //                        }

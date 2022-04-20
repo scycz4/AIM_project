@@ -1,6 +1,3 @@
-//import Heuristic.SinglePointMetaHeuristic.HillClimb.DavisBitHC;
-//import Heuristic.SinglePointMetaHeuristic.HillClimb.FirstImprovementHC;
-//import Heuristic.SinglePointMetaHeuristic.HillClimb.SteepestHC;
 import Heuristic.PopulationBasedMetaHeuristic.MultiMeme.MultiMemeAlgorithm;
 import Problem.Problem;
 
