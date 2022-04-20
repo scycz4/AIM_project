@@ -8,7 +8,7 @@ import java.util.Random;
 public class RandomBitFlip extends Mutation {
 
     public RandomBitFlip(Problem problem) {
-        super(problem, new Random());
+        super(problem);
     }
 
     @Override

@@ -7,7 +7,7 @@ import java.util.Random;
 
 public abstract class NDHC extends HillClimb{
     public NDHC(Problem problem) {
-        super(problem, new Random());
+        super(problem);
     }
 
     @Override

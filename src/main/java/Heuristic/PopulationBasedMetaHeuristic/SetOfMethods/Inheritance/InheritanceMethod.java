@@ -10,7 +10,7 @@ public abstract class InheritanceMethod {
     protected int populationSize;
     public InheritanceMethod(Problem problem,int populationSize){
         this.problem=problem;
-        random=new Random();
+        random=problem.getRandom();
         this.populationSize=populationSize;
     }
 

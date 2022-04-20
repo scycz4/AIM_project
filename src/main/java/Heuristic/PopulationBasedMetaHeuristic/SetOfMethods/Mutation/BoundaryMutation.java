@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class BoundaryMutation extends Mutation{
     public BoundaryMutation(Problem problem) {
-        super(problem, new Random());
+        super(problem);
     }
 
     @Override

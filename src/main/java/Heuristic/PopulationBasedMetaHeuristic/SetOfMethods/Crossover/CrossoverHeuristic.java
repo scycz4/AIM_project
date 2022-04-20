@@ -11,7 +11,7 @@ public abstract class CrossoverHeuristic {
 
     public CrossoverHeuristic(Problem problem){
         this.problem=problem;
-        this.random=new Random();
+        this.random=problem.getRandom();
     }
 
     public abstract void applyHeuristic(int var1,int var2,int var3,int var4);

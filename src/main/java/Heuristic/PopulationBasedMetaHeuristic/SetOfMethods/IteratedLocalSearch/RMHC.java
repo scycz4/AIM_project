@@ -7,7 +7,7 @@ import java.util.Random;
 
 public abstract class RMHC extends HillClimb {
     public RMHC(Problem problem) {
-        super(problem,new Random());
+        super(problem);
     }
 
     @Override

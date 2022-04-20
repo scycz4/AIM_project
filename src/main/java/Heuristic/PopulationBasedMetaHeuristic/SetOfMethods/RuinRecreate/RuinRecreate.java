@@ -10,7 +10,7 @@ public abstract class RuinRecreate extends Mutation {
     protected int[] indices;
 
     public RuinRecreate(Problem problem){
-        super(problem,new Random());
+        super(problem);
     }
 
     public void setIntensityOfMutation(double intensityOfMutation) {

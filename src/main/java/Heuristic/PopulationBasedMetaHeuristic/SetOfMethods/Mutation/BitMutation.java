@@ -9,7 +9,7 @@ public class BitMutation extends Mutation {
 
     private double mutationRate;
     public BitMutation(Problem problem){
-        super(problem,new Random());
+        super(problem);
         this.mutationRate =1.0/problem.getNumberOfVariables();
     }
 

@@ -36,7 +36,7 @@ public class ReplacementWithRandomToWorst extends Replacement{
                 worstOffspringCost = currentCost;
             }
         }
-        int index=new Random().nextInt(totalPopulationSize);
+        int index=problem.getRandom().nextInt(totalPopulationSize);
         // if best solution is in parent population, replace worst in offspring with best from parents
         if(index < populationSize) {
             offspringIndices[worstOffspringIndex - populationSize] = index;

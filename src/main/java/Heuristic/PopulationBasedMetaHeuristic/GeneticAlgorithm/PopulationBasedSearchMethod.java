@@ -7,7 +7,7 @@ import java.util.Random;
 public abstract class PopulationBasedSearchMethod implements SearchMethod{
 
     protected final Problem problem;
-    protected final Random rng;
+    protected final Random random;
     protected final int POP_SIZE;
     protected final int BACK_UP_SOLUTION_INDEX;
 
@@ -17,7 +17,7 @@ public abstract class PopulationBasedSearchMethod implements SearchMethod{
         problem.setPopulationSize(populationSize<<1);
 
         this.problem=problem;
-        this.rng=new Random();
+        this.random =problem.getRandom();
     }
 
     @Override

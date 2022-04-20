@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 
 public class DavisBitHCIE extends PopulationHeuristic {
     public DavisBitHCIE(Problem problem){
-        super(problem,new Random());
+        super(problem);
     }
 
     @Override

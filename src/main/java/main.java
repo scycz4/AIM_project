@@ -7,6 +7,7 @@ import Problem.Problem;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 
@@ -21,7 +22,7 @@ public class main {
         populationHeuristicRun.run();
     }
     static class PopulationHeuristicRun{
-        private final int TRIAL=10;
+        private final int TRIAL=1000;
         private final int POP_SIZE=16;
         private final int NUM_OF_MEMES=6;
 
@@ -45,8 +46,12 @@ public class main {
         private ArrayList<Double> best;
         private ArrayList<Double> worst;
 
+        private Random random;
+        private long[] seed=new long[]{1873579L, 1201680L, 1068678L, 2171053L, 1862364L, 1660721L, 5666442L, 5155633L, 3994215L, 2889132L, 2534306L, 4284292L};
+
         public PopulationHeuristicRun(String filename){
             this.filename=filename;
+            this.random=new Random();
         }
 
         public void run(){
@@ -54,7 +59,7 @@ public class main {
             for(int trial=0;trial<TRIAL;trial++){
                 System.out.println("Trial#"+(trial+1));
                 //muation, ruin-recreate, crossover, localsearch, inheritance, replacement, selection
-                problem=new Problem(POP_SIZE,NUM_OF_MEMES,new int[]{MUTATION,CROSSOVER,LOCAL_SEARCH,INHERITANCE,REPLACEMENT,SELECTION});
+                problem=new Problem(POP_SIZE,NUM_OF_MEMES,new int[]{MUTATION,CROSSOVER,LOCAL_SEARCH,INHERITANCE,REPLACEMENT,SELECTION},random);
 
                 problem.loadInstance(filename);
 
@@ -72,7 +77,7 @@ public class main {
                 best=mma.getBest();
                 worst=mma.getWorst();
 
-                this.writeFile(trial);
+//                this.writeFile(trial);
             }
             System.out.println((double)(System.nanoTime()-time)/1000000000);
         }

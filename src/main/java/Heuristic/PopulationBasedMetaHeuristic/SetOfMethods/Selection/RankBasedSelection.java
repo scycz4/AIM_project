@@ -8,11 +8,9 @@ import java.util.Random;
 
 public class RankBasedSelection extends Selection{
     private int populationSize;
-    private Random random;
     public RankBasedSelection(Problem problem, int populationSize) {
         super(problem);
         this.populationSize=populationSize;
-        random=new Random();
     }
 
     @Override

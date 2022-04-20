@@ -8,13 +8,13 @@ public class Solution {
     private int[] memeStates;
     private double boundary;
 
-    public Solution(Instance[] instance,double boundary,int numberOfMemes,int[] memeStates){
+    public Solution(Instance[] instance,double boundary,int numberOfMemes,int[] memeStates,Random random){
         this.instance=instance;
         this.boundary=boundary;
         this.memes=new Meme[numberOfMemes];
 
         for(int i=0;i<this.memes.length;i++){
-            this.memes[i]=new Meme(new Random().nextInt(memeStates[i]),memeStates[i]);
+            this.memes[i]=new Meme(random.nextInt(memeStates[i]),memeStates[i]);
         }
 
         if(this.memeStates==null){

@@ -6,8 +6,8 @@ import Problem.Problem;
 import java.util.Random;
 
 public abstract class HillClimb extends PopulationHeuristic {
-    public HillClimb(Problem problem, Random random) {
-        super(problem, random);
+    public HillClimb(Problem problem) {
+        super(problem);
     }
 
     @Override

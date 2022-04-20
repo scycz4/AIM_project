@@ -15,7 +15,7 @@ public class SimulatedAnneal{
     public SimulatedAnneal(LundyAndMees lundyAndMees,Problem problem){
         this.coolingSchedule=lundyAndMees;
         this.problem=problem;
-        random=new Random();
+        random= problem.getRandom();
     }
 
     public void applyHeuristic() {

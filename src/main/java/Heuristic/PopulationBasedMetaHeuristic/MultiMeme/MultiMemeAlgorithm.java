@@ -10,10 +10,7 @@ import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.BitMutation;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.BoundaryMutation;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.Mutation;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Mutation.RandomBitFlip;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.Replacement;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.ReplacementWithRandomToWorst;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.ReplacementWithStrongElitists;
-import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.ReplacementWithElitists;
+import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement.*;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.RuinRecreate.*;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.RankBasedSelection;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Selection.RouletteWheelSelection;
@@ -252,10 +249,10 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
     public void performMutationOfMemeplex(int solutionIndex) {
 
         for(int i=0;i< problem.getNumberOfMemes();i++){
-            if(rng.nextDouble()<innovationRate){
+            if(random.nextDouble()<innovationRate){
                 int option;
                 do{
-                    option=rng.nextInt(problem.getMeme(solutionIndex,i).getTotalOptions());
+                    option= random.nextInt(problem.getMeme(solutionIndex,i).getTotalOptions());
                     if(problem.getMeme(solutionIndex,i).getTotalOptions()==1){
                         break;
                     }

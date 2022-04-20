@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class LargestGreedyHeuristic extends PopulationHeuristic {
     public LargestGreedyHeuristic(Problem problem) {
-        super(problem, new Random());
+        super(problem);
     }
 
     @Override

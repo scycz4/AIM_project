@@ -8,9 +8,9 @@ public abstract class PopulationHeuristic {
     protected final Problem problem;
     protected final Random random;
 
-    public PopulationHeuristic(Problem problem,Random random){
+    public PopulationHeuristic(Problem problem){
         this.problem=problem;
-        this.random=random;
+        this.random= problem.getRandom();
     }
 
     public abstract void applyHeuristic(int var1);

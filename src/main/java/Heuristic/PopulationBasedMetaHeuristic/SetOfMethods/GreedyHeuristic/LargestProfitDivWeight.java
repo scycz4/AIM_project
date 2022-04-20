@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class LargestProfitDivWeight extends PopulationHeuristic {
     public LargestProfitDivWeight(Problem problem) {
-        super(problem, new Random());
+        super(problem);
     }
 
     @Override

@@ -38,18 +38,20 @@ public class Problem {
 
     private PopulationHeuristic[] greedyHeuristics;
 
+    private Random random;
 
-    public Problem(int populationSize,int numberOfMemes,int[] memeStates){
+
+    public Problem(int populationSize,int numberOfMemes,int[] memeStates,Random random){
         filename="test2_10_269.txt";
         file=getClass().getClassLoader().getResourceAsStream(filename);
         solutions=new Solution[populationSize];
-
+        this.random=random;
 
         this.memeStates=memeStates;
         this.numberOfMemes=numberOfMemes;
         this.totalEvaluations=0L;
         this.SIXTY_SECONDS_EVALUATIONS=new long[]{1873579L, 1201680L, 1068678L, 2171053L, 1862364L, 1660721L, 5666442L, 5155633L, 3994215L, 2889132L, 2534306L, 4284292L};
-        this.MAX_EVALUATIONS=(long)((double)this.SIXTY_SECONDS_EVALUATIONS[new Random().nextInt(SIXTY_SECONDS_EVALUATIONS.length)]*((double)Integer.MAX_VALUE/60.0D));
+        this.MAX_EVALUATIONS=(long)((double)this.SIXTY_SECONDS_EVALUATIONS[random.nextInt(SIXTY_SECONDS_EVALUATIONS.length)]*((double)Integer.MAX_VALUE/60.0D));
 
         currentObjectiveValue=new double[populationSize];
         int boundary=0;
@@ -137,7 +139,7 @@ public class Problem {
     }
 
     public void applyGreedyHeuristic(int index){
-        PopulationHeuristic greedyHeuristic=greedyHeuristics[new Random().nextInt(greedyHeuristics.length)];
+        PopulationHeuristic greedyHeuristic=greedyHeuristics[random.nextInt(greedyHeuristics.length)];
         greedyHeuristic.applyHeuristic(index);
         if(bestEverSolution==null){
             throw new NonExistBestSolutionException();
@@ -157,11 +159,9 @@ public class Problem {
 //    }
 
     private void initializeSolution(int i, Instance[] instances, double boundary, boolean reload) {
-        this.solutions[i]=new Solution(instances,boundary,numberOfMemes,memeStates);
+        this.solutions[i]=new Solution(instances,boundary,numberOfMemes,memeStates,random);
         Instance[] is=this.solutions[i].deepCopy().getInstance();
-        Random random=new Random();
         for(int j=0;j<instances.length;j++){
-//            is[j].setState(new Random().nextBoolean());
             if(random.nextDouble()<0.8){
                 is[j].setState(true);
             }
@@ -477,7 +477,7 @@ public class Problem {
 
     public int getBitWithHighestProfit(int index){
         Instance[] instances=solutions[index].getInstance();
-        int bit=new Random().nextInt(instances.length);
+        int bit=random.nextInt(instances.length);
         double profit=Integer.MIN_VALUE;
         for(int j=0;j<instances.length;j++){
             if(instances[j].isState()){
@@ -492,7 +492,7 @@ public class Problem {
 
     public int getBitWithHighestWeight(int index){
         Instance[] instances=solutions[index].getInstance();
-        int bit=new Random().nextInt(instances.length);
+        int bit=random.nextInt(instances.length);
         double weight=Integer.MIN_VALUE;
         for(int j=0;j<instances.length;j++){
             if(instances[j].isState()){
@@ -507,7 +507,7 @@ public class Problem {
 
     public int getBitWithLowestProfit(int index){
         Instance[] instances=solutions[index].getInstance();
-        int bit=new Random().nextInt(instances.length);
+        int bit=random.nextInt(instances.length);
         double profit=Integer.MAX_VALUE;
         for(int j=0;j<instances.length;j++){
             if(instances[j].isState()){
@@ -522,7 +522,7 @@ public class Problem {
 
     public int getBitWithLowestWeight(int index){
         Instance[] instances=solutions[index].getInstance();
-        int bit=new Random().nextInt(instances.length);
+        int bit=random.nextInt(instances.length);
         double weight=Integer.MAX_VALUE;
         for(int j=0;j<instances.length;j++){
             if(instances[j].isState()){
@@ -537,7 +537,7 @@ public class Problem {
 
     public int getBitWithHighestProfitDivWeight(int index){
         Instance[] instances=solutions[index].getInstance();
-        int bit=new Random().nextInt(instances.length);
+        int bit=random.nextInt(instances.length);
         double div=Double.NEGATIVE_INFINITY;
         for(int j=0;j<instances.length;j++){
             if(instances[j].isState()){
@@ -555,7 +555,7 @@ public class Problem {
 
     public int getBitWithLowestProfitDivWeight(int index){
         Instance[] instances=solutions[index].getInstance();
-        int bit=new Random().nextInt(instances.length);
+        int bit=random.nextInt(instances.length);
         double div=Double.POSITIVE_INFINITY;
         for(int j=0;j<instances.length;j++){
             if(instances[j].isState()){
@@ -569,6 +569,9 @@ public class Problem {
             }
         }
         return bit;
+    }
+    public Random getRandom() {
+        return random;
     }
 
     public boolean isOverWeight(int index){

@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 
 public abstract class DBHC extends HillClimb {
     public DBHC(Problem problem){
-        super(problem,new Random());
+        super(problem);
     }
     @Override
     public void applyHeuristic(int index) {
