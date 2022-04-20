@@ -15,6 +15,7 @@ public class OneBitAdaptiveCrossover extends CrossoverHeuristic{
         for(int i=0;i<problem.getIntensityOfMutation();i++){
             if(problem.getLastBitOfSolution(p1)==problem.getLastBitOfSolution(p2)&&problem.getLastBitOfSolution(p1)){
                 twoPointCrossover.applyHeuristic(p1,p2,c1,c2);
+
             }else if(problem.getLastBitOfSolution(p1)==problem.getLastBitOfSolution(p2)&&!problem.getLastBitOfSolution(p1)){
                 uniformCrossover.applyHeuristic(p1,p2,c1,c2);
             }else{

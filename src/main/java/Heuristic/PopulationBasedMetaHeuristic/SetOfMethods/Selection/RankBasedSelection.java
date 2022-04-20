@@ -43,7 +43,6 @@ public class RankBasedSelection extends Selection{
             }
         }
         return random.nextInt(indexValues.length);
-//        return random.nextInt(populationSize);
     }
 
     static class IndexValue{

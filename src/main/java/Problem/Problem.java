@@ -4,6 +4,8 @@ import Heuristic.PopulationBasedMetaHeuristic.PopulationHeuristic;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.GreedyHeuristic.LargestGreedyHeuristic;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.GreedyHeuristic.LargestProfitDivWeight;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.GreedyHeuristic.LowestGreedyHeuristic;
+import MyExceptions.IndexBoundaryException;
+import MyExceptions.NonExistBestSolutionException;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -137,6 +139,9 @@ public class Problem {
     public void applyGreedyHeuristic(int index){
         PopulationHeuristic greedyHeuristic=greedyHeuristics[new Random().nextInt(greedyHeuristics.length)];
         greedyHeuristic.applyHeuristic(index);
+        if(bestEverSolution==null){
+            throw new NonExistBestSolutionException();
+        }
         if(bestEverSolution.getObjectiveValue()<=getObjectiveFunctionValue(index)){
             bestEverSolution=solutions[index].deepCopy();
         }
@@ -224,12 +229,19 @@ public class Problem {
 
     public double getObjectiveFunctionValue(int index){
         this.totalEvaluations++;
-        if(solutions[index].getObjectiveValue()>bestEverSolution.getObjectiveValue()&&!isOverWeight(index)){
+        double value;
+        if(isOverWeight(index)){
+            value=solutions[index].getObjectiveValue()*(1.0/(4.0*getWeight(index)/getBoundary(index)));
+        }
+        else{
+            value=solutions[index].getObjectiveValue();
+        }
+        if(value>bestEverSolution.getObjectiveValue()&&!isOverWeight(index)){
             bestEverSolution=solutions[index].deepCopy();
         }
         currentObjectiveValue[index]=solutions[index].getObjectiveValue();
         Arrays.fill(flippedIndex[index],false);
-        return currentObjectiveValue[index];
+        return value;
     }
 
     public double getBestSolutionValue(){
@@ -267,11 +279,11 @@ public class Problem {
     public void copySolution(int originIndex,int destinationIndex){
         if(originIndex < 0 || originIndex >= this.solutions.length) {
 
-            fatal("Origin Index [" + originIndex + "] does not exist.");
+            throw new IndexBoundaryException("Origin Index [" + originIndex + "] does not exist.");
 
         } else if(destinationIndex < 0 || destinationIndex >= this.solutions.length) {
 
-            fatal("Destination Index [" + destinationIndex + "]  does not exist.");
+            throw new IndexBoundaryException("Destination Index [" + destinationIndex + "]  does not exist.");
 
         } else {
 
@@ -280,11 +292,6 @@ public class Problem {
             currentObjectiveValue[destinationIndex]=currentObjectiveValue[originIndex];
             flippedIndex[destinationIndex]=flippedIndex[originIndex].clone();
         }
-    }
-
-    private void fatal(String errorMessage) {
-        System.err.println(errorMessage);
-        System.exit(0);
     }
 
     public void exchangeBits(int child1,int child2,int j){
@@ -299,17 +306,17 @@ public class Problem {
                         this.solutions[child1].getInstance()[j].setState(bVarB);
                         this.solutions[child2].getInstance()[j].setState(bVarA);
                     } else {
-                        this.fatal(j < 0 ? "Variable cannot be negative." : "Variable " + j + " exceeds the number of variables.");
+                        throw new IndexBoundaryException(j < 0 ? "Variable cannot be negative." : "Variable " + j + " exceeds the number of variables.");
                     }
                 } else {
                     boolean origin = this.solutions[child1] == null;
-                    this.fatal("No solution initialised at " + (origin ? "origin index." : "destination index."));
+                    throw new IndexBoundaryException("No solution initialised at " + (origin ? "origin index." : "destination index."));
                 }
             } else {
-                this.fatal("DestinationIndex [" + child2 + "] does not exist.");
+                throw new IndexBoundaryException("DestinationIndex [" + child2 + "] does not exist.");
             }
         } else {
-            this.fatal("Origin Index [" + child1 + "] does not exist.");
+            throw new IndexBoundaryException("Origin Index [" + child1 + "] does not exist.");
         }
     }
 
@@ -360,8 +367,7 @@ public class Problem {
             return this.solutions[solutionIndex].getMeme(memeNumber);
         }
         else{
-            this.fatal("solution index or meme number exceeded the total number of solutions or memes!");
-            return null;
+            throw new IndexBoundaryException("solution index or meme number exceeded the total number of solutions or memes!");
         }
     }
 
@@ -420,21 +426,17 @@ public class Problem {
             }
         }
 
-        double weight=getWeight(index);
-        double boundary=getBoundary(index);
-
-        if(weight>boundary){
-            currentObjectiveValue[index]=(weight-boundary)/boundary;
+        currentObjectiveValue[index]=currentObjectiveValue[index]+delta;
+        Arrays.fill(flippedIndex[index],false);
+        if(isOverWeight(index)){
+            return currentObjectiveValue[index]*(1.0/(4.0*getWeight(index)/getBoundary(index)));
         }
         else{
-            currentObjectiveValue[index]=currentObjectiveValue[index]+delta;
+            if(currentObjectiveValue[index]>bestEverSolution.getObjectiveValue()){
+                bestEverSolution=solutions[index].deepCopy();
+            }
+            return currentObjectiveValue[index];
         }
-
-        if(currentObjectiveValue[index]>bestEverSolution.getObjectiveValue()){
-            bestEverSolution=solutions[index].deepCopy();
-        }
-        Arrays.fill(flippedIndex[index],false);
-        return currentObjectiveValue[index];
     }
 
     public int[] diffGenePoint(int p1,int p2){

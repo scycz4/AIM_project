@@ -222,10 +222,10 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
 
     private void applyInheritanceForChildDependentOnMeme(int p1, int p2, int c1, int c2, int memeIndex) {
         int index;
-        if(problem.getObjectiveFunctionValue(c1)>problem.getObjectiveFunctionValue(c2)){
-            index=c1;
+        if(problem.getObjectiveFunctionValue(p1)>problem.getObjectiveFunctionValue(p2)){
+            index=p1;
         } else {
-            index=c2;
+            index=p2;
         }
         inheritance[problem.getMeme(index,memeIndex).getOption()].performMemeticInheritance(p1,p2,c1,c2);
     }

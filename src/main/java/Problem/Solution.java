@@ -56,9 +56,9 @@ public class Solution {
             int judge=is.isState()?1:0;
             value+=judge*is.getProfit();
         }
-        if(getWeight()>getBoundary()){
-            value=-getWeight()/getBoundary();
-        }
+//        if(getWeight()>getBoundary()){
+//            value=-getWeight()/getBoundary();
+//        }
         return value;
     }
 

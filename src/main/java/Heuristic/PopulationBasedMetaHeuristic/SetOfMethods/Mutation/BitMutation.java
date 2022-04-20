@@ -19,9 +19,9 @@ public class BitMutation extends Mutation {
             for(int j=0;j<problem.getNumberOfVariables();j++){
                 if(random.nextDouble()< mutationRate){
                     problem.bitFlip(solutionIndex,j);
-                    if(problem.isOverWeight(solutionIndex)){
-                        problem.bitFlip(solutionIndex,j);
-                    }
+//                    if(problem.isOverWeight(solutionIndex)){
+//                        problem.bitFlip(solutionIndex,j);
+//                    }
                 }
             }
         }

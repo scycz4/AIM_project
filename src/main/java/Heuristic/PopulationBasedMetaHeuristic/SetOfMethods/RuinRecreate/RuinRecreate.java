@@ -34,11 +34,8 @@ public abstract class RuinRecreate extends Mutation {
     protected abstract void ruin(int index);
     protected void recreate(int index){
         for(int i=0;i<indices.length;i++){
-            if(random.nextDouble()<0.3){
+            if(random.nextDouble()<0.4){
                 problem.bitFlip(index,indices[i]);
-                if (problem.isOverWeight(index)){
-                    problem.bitFlip(index,indices[i]);
-                }
             }
         }
     }

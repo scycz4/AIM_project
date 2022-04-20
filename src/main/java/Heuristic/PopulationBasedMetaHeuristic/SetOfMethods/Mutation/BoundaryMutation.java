@@ -15,18 +15,18 @@ public class BoundaryMutation extends Mutation{
             int j=random.nextInt(problem.getNumberOfVariables());
             double mutation=random.nextDouble();
             if(mutation>0.5){
-                if(problem.getOneBitOfSolution(index,j)){
+                if(problem.getLastBitOfSolution(index)){
                     problem.bitFlip(index,j);
-                    if(problem.isOverWeight(index)) {
-                        problem.bitFlip(index,j);
-                    }
+//                    if(problem.isOverWeight(index)) {
+//                        problem.bitFlip(index,j);
+//                    }
                 }
             }else {
-                if(!problem.getOneBitOfSolution(index,j)){
+                if(!problem.getLastBitOfSolution(index)){
                     problem.bitFlip(index,j);
-                    if(problem.isOverWeight(index)) {
-                        problem.bitFlip(index,j);
-                    }
+//                    if(problem.isOverWeight(index)) {
+//                        problem.bitFlip(index,j);
+//                    }
                 }
             }
         }
