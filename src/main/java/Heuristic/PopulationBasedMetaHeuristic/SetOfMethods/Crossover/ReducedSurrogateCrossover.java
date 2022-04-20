@@ -28,6 +28,7 @@ public class ReducedSurrogateCrossover extends CrossoverHeuristic{
         problem.copySolution(parent1,child1);
         problem.copySolution(parent2,child2);
         for(int i=0;i<problem.getIntensityOfMutation();i++){
+            //indices of different genes(bits) between parent1 and parent2
             int[] diff=problem.diffGenePoint(parent1,parent2);
             if(diff.length==0){
                 return;
@@ -36,9 +37,6 @@ public class ReducedSurrogateCrossover extends CrossoverHeuristic{
                 if(random.nextDouble()< crossoverProbability){
                     for(int j=0;j<point;j++){
                         problem.exchangeBits(child1,child2,j);
-//                        if(problem.isOverWeight(child1)||problem.isOverWeight(child2)){
-//                            problem.exchangeBits(child1,child2,j);
-//                        }
                     }
                 }
             }

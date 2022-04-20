@@ -9,6 +9,7 @@ import Problem.Problem;
 public abstract class RuinRecreate extends Mutation {
     protected int IntensityOfMutation;
     protected int[] indices;
+    //the rate of whether to recreate on that bit
     protected final double recreateRate=0.4;
 
     /**

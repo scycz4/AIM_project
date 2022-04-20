@@ -28,8 +28,6 @@ public abstract class Replacement {
      */
     public void doReplacement(){
         int[] newPopulation=getNextGeneration();
-//        newPopulation=Arrays.stream(newPopulation).boxed().sorted(Comparator.reverseOrder())
-//                .mapToInt(Integer::intValue).toArray();
         Arrays.sort(newPopulation);
         for(int i=0;i<populationSize;i++){
             if(i!=newPopulation[i]){

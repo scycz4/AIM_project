@@ -26,7 +26,9 @@ import java.util.ArrayList;
  * of different low level heuristic) will be improved
  */
 public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
+    // the rate of whether to mutate a meme option
     private final double innovationRate;
+
     private Mutation[] mutation;
     private final CrossoverHeuristic[] crossover;
     private final Replacement[] replacement;
@@ -34,13 +36,15 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
 
     private final InheritanceMethod[] inheritance;
 
-    private final HillClimb[] lss;
+    private final HillClimb[] hillClimbs;
 
+    // contains best and current objective value for each generation
     private ArrayList<Double> best=new ArrayList<Double>();
     private ArrayList<Double> worst=new ArrayList<Double>();
 
     private static final int tSize=4;
 
+    //below constant represent memeIndex of different heuristic types
     private final int MUTATION=0;
     private final int CROSSOVER=1;
     private final int LOCAL_SEARCH =2;
@@ -59,11 +63,11 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
      * @param replacement the array contains replacement methods
      * @param selection the array contains selection methods
      * @param inheritanceMethod the array contains inheritance methods
-     * @param lss the array contains local search methods
+     * @param hillClimbs the array contains local search methods
      */
     public MultiMemeAlgorithm(Problem problem, int populationSize, double innovationRate, CrossoverHeuristic[] crossoverHeuristic
                 , Mutation[] mutation, Replacement[] replacement, Selection[] selection, InheritanceMethod[] inheritanceMethod,
-                              HillClimb[] lss) {
+                              HillClimb[] hillClimbs) {
         super(problem, populationSize);
 
         this.innovationRate = innovationRate;
@@ -72,7 +76,7 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
         this.replacement = replacement;
         this.selection = selection;
         this.inheritance = inheritanceMethod;
-        this.lss = lss;
+        this.hillClimbs = hillClimbs;
 
     }
 
@@ -286,7 +290,7 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
      * @param memeIndex the specific meme need to be used
      */
     public void applyLocalSearchForChildDependentOnMeme(int childIndex, int memeIndex) {
-        lss[problem.getMeme(childIndex,memeIndex).getOption()].applyHeuristic(childIndex);
+        hillClimbs[problem.getMeme(childIndex,memeIndex).getOption()].applyHeuristic(childIndex);
     }
 
     /**

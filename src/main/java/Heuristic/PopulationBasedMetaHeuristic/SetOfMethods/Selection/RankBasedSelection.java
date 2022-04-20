@@ -34,6 +34,8 @@ public class RankBasedSelection extends Selection{
             double currentFitness=problem.getObjectiveFunctionValue(i);
             indexValues[i]=new IndexValue(currentFitness,i);
         }
+
+        //sort the array descending according to its current value
         Arrays.sort(indexValues, new Comparator<IndexValue>() {
             @Override
             public int compare(IndexValue o1, IndexValue o2) {
@@ -42,7 +44,11 @@ public class RankBasedSelection extends Selection{
         });
         double prob=0.0;
         double randProb=random.nextDouble();
+
+        //the array of probability of selecting this rank
         double[] rank=new double[populationSize];
+
+        //the sum of the rank (from 1 to populationSize)
         double totalRank=(1+populationSize)*populationSize/2.0;
         for(int i=0;i<populationSize;i++){
             rank[i]=(i+1)/totalRank;

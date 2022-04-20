@@ -10,6 +10,7 @@ import java.util.Random;
 public abstract class CrossoverHeuristic {
     protected Problem problem;
     protected Random random;
+    //the rate of whether to do crossover
     protected double crossoverProbability =0.95;
 
     /**

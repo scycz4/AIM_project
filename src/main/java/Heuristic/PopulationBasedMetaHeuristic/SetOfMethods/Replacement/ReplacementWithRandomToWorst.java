@@ -32,32 +32,28 @@ public class ReplacementWithRandomToWorst extends Replacement{
         // offspring indices are from 'populationSize' inclusive to 'populationSize * 2' exclusive.
         int[] offspringIndices = IntStream.range(populationSize, totalPopulationSize).toArray();
 
-        // elitism replacing worst offspring with best solution if not in offspring
         double[] populationCosts = new double[totalPopulationSize];
 
         double worstOffspringCost =Double.POSITIVE_INFINITY;
         int worstOffspringIndex = -1;
 
-        // evaluate the objective function value (cost) of each solution from both parent and offspring populations
         for(int index = 0; index < totalPopulationSize; index++) {
 
             double currentCost = problem.getObjectiveFunctionValue(index);
             populationCosts[index] = currentCost;
 
-            // keep track of the worst solution in the offspring population
             if( index >= populationSize && currentCost < worstOffspringCost) {
 
                 worstOffspringIndex = index;
                 worstOffspringCost = currentCost;
             }
         }
-        int index=problem.getRandom().nextInt(totalPopulationSize);
-        // if best solution is in parent population, replace worst in offspring with best from parents
+        int index=problem.getRandom().nextInt(populationSize);
+        // if best solution is in parent population, replace worst in offspring with random from parents and children
         if(index < populationSize) {
             offspringIndices[worstOffspringIndex - populationSize] = index;
         }
 
-        // return array of memory locations for replacement
         return offspringIndices;
     }
 }

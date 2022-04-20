@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 
 public class main {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args){
 
         System.out.print("please enter the file name you want to load:");
         Scanner in=new Scanner(System.in);
@@ -19,7 +19,7 @@ public class main {
         populationHeuristicRun.run();
     }
     static class PopulationHeuristicRun{
-        private final int TRIAL=1000;
+        private final int TRIAL=10;
         private final int POP_SIZE=16;
         private final int NUM_OF_MEMES=6;
 
@@ -44,11 +44,10 @@ public class main {
         private ArrayList<Double> worst;
 
         private Random random;
-        private long[] seed=new long[]{1873579L, 1201680L, 1068678L, 2171053L, 1862364L, 1660721L, 5666442L, 5155633L, 3994215L, 2889132L, 2534306L, 4284292L};
 
         public PopulationHeuristicRun(String filename){
             this.filename=filename;
-            this.random=new Random();
+            this.random=new Random(1000);
         }
 
         public void run(){
@@ -74,7 +73,7 @@ public class main {
                 best=mma.getBest();
                 worst=mma.getWorst();
 
-//                this.writeFile(trial);
+                this.writeFile(trial);
             }
             System.out.println((double)(System.nanoTime()-time)/1000000000);
         }
@@ -113,63 +112,4 @@ public class main {
                 }
         }
     }
-
-//    class SinglePointHeuristicRun{
-//        private String filename;
-//        private int CURRENT_SOLUTION_INDEX=0;
-//        private int BACK_UP_SOLUTION_INDEX=1;
-//        private int LOOP_TIME=10000;
-//        private int RUN_TIME=15000;
-//        private int POP_SIZE=16;
-//        private int T_SIZE=3;
-//        public SinglePointHeuristicRun(String filename){
-//            this.filename=filename;
-//        }
-//
-//        public void run(){
-//
-//            Problem problem=new Problem();
-//            problem.loadInstance(filename);
-//            SteepestHC hc1=new SteepestHC();
-//            FirstImprovementHC hc2=new FirstImprovementHC();
-//            DavisBitHC hc3=new DavisBitHC();
-//            for(int i=0;i<LOOP_TIME;i++){
-//                hc1.applyHeuristic(problem);
-//                System.out.print("best: "+problem.getBestSolutionValue() + " " + problem.getBestSolutionAsString() + " current: ");
-//                System.out.println(problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX) + " " + problem.getSolutionAsString(CURRENT_SOLUTION_INDEX));
-//            }
-//            System.out.println(problem.getBestSolutionValue());
-//
-//
-//            LundyAndMees lundyAndMees=new LundyAndMees(problem.getBestSolutionValue());
-//            SimulatedAnneal simulatedAnneal=new SimulatedAnneal(lundyAndMees,problem);
-//            long t=System.currentTimeMillis();
-//            long end=t+RUN_TIME;
-//            while(System.currentTimeMillis()<end){
-//                simulatedAnneal.applyHeuristic();
-//                System.out.print("best: "+problem.getBestSolutionValue() + " " + problem.getBestSolutionAsString() + " current: ");
-//                System.out.println(problem.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX) + " " + problem.getSolutionAsString(CURRENT_SOLUTION_INDEX));
-//            }
-//            System.out.println(problem.getBestSolutionValue());
-//
-//
-//            Problem problem1=new Problem(POP_SIZE,0,null);
-//            TournamentSelection tournamentSelection=new TournamentSelection(problem1,POP_SIZE,T_SIZE);
-//            CrossoverHeuristic crossoverHeuristic=new UniformCrossover(problem1);
-//            PopulationHeuristic mutation=new BitMutation(problem1);
-//            PopulationHeuristic localSearch=new DavisBitHCIE(problem1);
-//            Replacement replacement=new ReplacementWithElitists();
-//            SearchMethod heuristic=new MemeticAlgorithm(problem1,POP_SIZE,crossoverHeuristic,mutation,localSearch,replacement);
-//
-//
-//
-//            while(!problem.hasTimeExpired()) {
-//                heuristic.run();
-//                System.out.print("best: "+problem1.getBestSolutionValue() + " " + problem1.getBestSolutionAsString() + " current: ");
-//                System.out.println(problem1.getObjectiveFunctionValue(CURRENT_SOLUTION_INDEX) + " " + problem1.getSolutionAsString(CURRENT_SOLUTION_INDEX));
-////        System.out.println(problem1.getBestSolutionValue());
-////        System.out.println(problem1.getBestSolutionAsString());
-//            }
-//        }
-//    }
 }

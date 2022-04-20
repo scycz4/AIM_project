@@ -15,6 +15,7 @@ public class UniformBitMutation extends Mutation {
      */
     public UniformBitMutation(Problem problem){
         super(problem);
+        //the rate of whether to mutate that bit
         this.mutationRate =1.0/problem.getNumberOfVariables();
     }
 
