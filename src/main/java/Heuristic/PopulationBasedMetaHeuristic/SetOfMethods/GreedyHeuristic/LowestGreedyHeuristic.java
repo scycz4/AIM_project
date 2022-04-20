@@ -6,11 +6,23 @@ import Problem.Problem;
 import java.util.Arrays;
 import java.util.Random;
 
+/**
+ * this class will greedy search for the lowest items and flip that bit until it is overweight
+ */
 public class LowestGreedyHeuristic extends PopulationHeuristic {
+    /**
+     * create object
+     * @param problem the problem need to be solved
+     */
     public LowestGreedyHeuristic(Problem problem) {
         super(problem);
     }
 
+    /**
+     * apply heuristic, select the unchosen item and flip that bit, until traversal all the bit.
+     * If it is overweight, then put back the selected items and go to the next one
+     * @param index the solution to be applied this heuristic
+     */
     @Override
     public void applyHeuristic(int index) {
         int[] indexes=problem.getSortedLargestProfitIndexArray(index);

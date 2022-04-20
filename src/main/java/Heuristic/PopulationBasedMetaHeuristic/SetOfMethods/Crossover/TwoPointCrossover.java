@@ -2,13 +2,26 @@ package Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover;
 
 import Problem.Problem;
 
-import java.util.Random;
-
+/**
+ * this class will exchange all the bits between selected two points
+ */
 public class TwoPointCrossover extends CrossoverHeuristic{
+    /**
+     * create object
+     * @param problem the problem need to be solved
+     */
     public TwoPointCrossover(Problem problem) {
         super(problem);
     }
 
+    /**
+     * it will apply heuristic for IoM times, and randomly choose two points, then if randomly generated
+     * double is less than crossover probability, exchange all the bits between two points
+     * @param parent1 the parent
+     * @param parent2 the parent
+     * @param child1 the child solution need to be generated
+     * @param child2 the child solution need to be generated
+     */
     @Override
     public void applyHeuristic(int parent1, int parent2, int child1, int child2) {
         problem.copySolution(parent1,child1);
@@ -27,7 +40,7 @@ public class TwoPointCrossover extends CrossoverHeuristic{
 
 
 
-            if(random.nextDouble()<CROSSOVER_PROBABILITY){
+            if(random.nextDouble()< crossoverProbability){
                 for(int i=point1;i<point2;i++){
                     problem.exchangeBits(child1,child2,i);
 //                    if(problem.isOverWeight(child1)||problem.isOverWeight(child2)){

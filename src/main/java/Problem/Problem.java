@@ -13,6 +13,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 
+/**
+ * this class will create a problem to be solved
+ */
 public class Problem {
     private Solution[] solutions;
     private InputStream file;
@@ -25,11 +28,6 @@ public class Problem {
     private Solution bestEverSolution;
     private double bestEverSolutionObjectiveValue;
 
-
-    private long totalEvaluations;
-    private final long MAX_EVALUATIONS;
-    private final long[] SIXTY_SECONDS_EVALUATIONS;
-
     private int intensityOfMutation;
     private int depthOfSearch;
 
@@ -40,7 +38,13 @@ public class Problem {
 
     private Random random;
 
-
+    /**
+     * create a problem
+     * @param populationSize the size of population
+     * @param numberOfMemes the number of memes
+     * @param memeStates the options that memes has
+     * @param random a random generator
+     */
     public Problem(int populationSize,int numberOfMemes,int[] memeStates,Random random){
         filename="test2_10_269.txt";
         file=getClass().getClassLoader().getResourceAsStream(filename);
@@ -49,10 +53,6 @@ public class Problem {
 
         this.memeStates=memeStates;
         this.numberOfMemes=numberOfMemes;
-        this.totalEvaluations=0L;
-        this.SIXTY_SECONDS_EVALUATIONS=new long[]{1873579L, 1201680L, 1068678L, 2171053L, 1862364L, 1660721L, 5666442L, 5155633L, 3994215L, 2889132L, 2534306L, 4284292L};
-        this.MAX_EVALUATIONS=(long)((double)this.SIXTY_SECONDS_EVALUATIONS[random.nextInt(SIXTY_SECONDS_EVALUATIONS.length)]*((double)Integer.MAX_VALUE/60.0D));
-
         currentObjectiveValue=new double[populationSize];
         int boundary=0;
         Instance[] instances = null;
@@ -80,9 +80,6 @@ public class Problem {
         flippedIndex=new boolean[solutions.length][instances.length];
         for(int i=0;i<solutions.length;i++){
             initializeSolution(i,instances,boundary,false);
-//            while(isOverWeight(i)){
-//                initializeSolution(i,instances,boundary,false);
-//            }
             currentObjectiveValue[i]=solutions[i].getObjectiveValue();
         }
 
@@ -96,6 +93,10 @@ public class Problem {
         }
     }
 
+    /**
+     * load the instances(items) from file
+     * @param filename the name of file
+     */
     public void loadInstance(String filename){
         this.filename=filename;
 
@@ -127,9 +128,6 @@ public class Problem {
         flippedIndex=new boolean[solutions.length][instances.length];
         for(int i=0;i<solutions.length;i++){
             initializeSolution(i,instances,boundary,true);
-//            while(isOverWeight(i)){
-//                initializeSolution(i,instances,boundary,true);
-//            }
             currentObjectiveValue[i]=solutions[i].getObjectiveValue();
         }
 
@@ -138,6 +136,10 @@ public class Problem {
         }
     }
 
+    /**
+     * apply one of three greedy search on solution on that index
+     * @param index the index of solution
+     */
     public void applyGreedyHeuristic(int index){
         PopulationHeuristic greedyHeuristic=greedyHeuristics[random.nextInt(greedyHeuristics.length)];
         greedyHeuristic.applyHeuristic(index);
@@ -150,13 +152,13 @@ public class Problem {
         }
     }
 
+    /**
+     * get the file name
+     * @return the file name
+     */
     public String getFilename() {
         return this.filename;
     }
-
-//    public int getNumberOfItems(){
-//        return bestEverSolution.getNumberOfInstance();
-//    }
 
     private void initializeSolution(int i, Instance[] instances, double boundary, boolean reload) {
         this.solutions[i]=new Solution(instances,boundary,numberOfMemes,memeStates,random);
@@ -170,7 +172,6 @@ public class Problem {
             }
         }
         this.solutions[i].setInstance(is);
-//        applyGreedyHeuristic(i);
         if(bestEverSolution==null||reload){
             bestEverSolution=this.solutions[i].deepCopy();
             bestEverSolutionObjectiveValue=getObjectiveFunctionValue(i);
@@ -182,6 +183,11 @@ public class Problem {
     }
 
 
+    /**
+     * rank the indices by their profit descending
+     * @param memoryIndex the index of solution
+     * @return ranked indices
+     */
     public int[] getSortedLargestProfitIndexArray(int memoryIndex){
         Solution solution=solutions[memoryIndex];
         Instance[] instances=solution.getInstance();
@@ -203,6 +209,11 @@ public class Problem {
         return index;
     }
 
+    /**
+     * rank the indices by their profit per weight descending
+     * @param memoryIndex the index of solution
+     * @return ranked indices
+     */
     public int[] getSortedLargestProfitDivWeightIndexArray(int memoryIndex) {
         Solution solution=solutions[memoryIndex];
         Instance[] instances=solution.getInstance();
@@ -224,21 +235,39 @@ public class Problem {
         return index;
     }
 
-
+    /**
+     * get the string of best solution
+     * @return the string of best solution
+     */
     public String getBestSolutionAsString(){
         return this.getSolutionAsString(this.bestEverSolution);
     }
 
+    /**
+     * get the string of that solution
+     * @param solution solution
+     * @return the string of that solution
+     */
     public String getSolutionAsString(Solution solution){
         return solution.getSolutionAsString();
     }
 
+    /**
+     * get the string of that solution
+     * @param index the index of solution
+     * @return the string of that solution
+     */
     public String getSolutionAsString(int index){
         return solutions[index].getSolutionAsString();
     }
 
+    /**
+     * get the objective value of that index solution, if the weight is
+     * greater than boundary, then multiple a punishing factor with objective value
+     * @param index the index of solution
+     * @return the objective value
+     */
     public double getObjectiveFunctionValue(int index){
-        this.totalEvaluations++;
         double value;
         if(isOverWeight(index)){
             value=solutions[index].getObjectiveValue()*(1.0/(4.0*getWeight(index)/getBoundary(index)));
@@ -255,19 +284,37 @@ public class Problem {
         return value;
     }
 
+    /**
+     * get the value of best solution
+     * @return the value of best solution
+     */
     public double getBestSolutionValue(){
         return bestEverSolutionObjectiveValue;
     }
 
+    /**
+     * bit flip the current solution on index item
+     * @param index the index of item
+     */
     public void bitFlip(int index){
         this.bitFlip(0,index);
     }
 
+    /**
+     * bit flip the bit on index of solution on memoryIndex
+     * @param memoryIndex index of solution
+     * @param index index of item
+     */
     public void bitFlip(int memoryIndex,int index){
         solutions[memoryIndex].bitFlip(index);
         flippedIndex[memoryIndex][index]=!flippedIndex[memoryIndex][index];
     }
 
+    /**
+     * set the bit on index of solution on memoryIndex to false
+     * @param memoryIndex the index of solution
+     * @param index the index of item
+     */
     public void destroyBit(int memoryIndex, int index){
         if(getOneBitOfSolution(memoryIndex,index)){
             bitFlip(memoryIndex,index);
@@ -275,18 +322,37 @@ public class Problem {
         }
     }
 
+    /**
+     * get current weight of solution
+     * @param index the index of solution
+     * @return the weight
+     */
     public double getWeight(int index) {
         return solutions[index].getWeight();
     }
 
+    /**
+     * get current boundary of solution
+     * @param index the index of solution
+     * @return the boundary
+     */
     public double getBoundary(int index) {
         return solutions[index].getBoundary();
     }
 
+    /**
+     * the number of items
+     * @return number of items
+     */
     public int getNumberOfVariables(){
         return bestEverSolution.getNumberOfInstance();
     }
 
+    /**
+     * copy the solution from originIndex to destinationIndex
+     * @param originIndex index of solution
+     * @param destinationIndex index of solution
+     */
     public void copySolution(int originIndex,int destinationIndex){
         if(originIndex < 0 || originIndex >= this.solutions.length) {
 
@@ -305,6 +371,12 @@ public class Problem {
         }
     }
 
+    /**
+     * exchange the bit on j index between child1 and child2 solution
+     * @param child1 the child1 index
+     * @param child2 the child2 index
+     * @param j the index of items
+     */
     public void exchangeBits(int child1,int child2,int j){
         if (child1 >= 0 && child1 < this.solutions.length) {
             if (child2 >= 0 && child2 < this.solutions.length) {
@@ -331,14 +403,10 @@ public class Problem {
         }
     }
 
-//    public double translateMaxToMinValue(){
-//        int value=0;
-//        for(int i=0;i<getNumberOfVariables();i++){
-//            value+=solutions[0].getInstance()[i].getProfit();
-//        }
-//        return value-solutions[0].getObjectiveValue();
-//    }
-
+    /**
+     * set the size of population of problem
+     * @param populationSize the size of population
+     */
     public void setPopulationSize(int populationSize){
         Solution[] newPopulation;
         int i;
@@ -368,11 +436,20 @@ public class Problem {
 
     }
 
-
+    /**
+     * get the number of memes
+     * @return the number of memes
+     */
     public int getNumberOfMemes(){
         return this.numberOfMemes;
     }
 
+    /**
+     * get the meme
+     * @param solutionIndex the index of solution
+     * @param memeNumber the index of meme
+     * @return the meme
+     */
     public Meme getMeme(int solutionIndex,int memeNumber){
         if(solutionIndex<this.solutions.length&&memeNumber<this.getNumberOfMemes()){
             return this.solutions[solutionIndex].getMeme(memeNumber);
@@ -382,6 +459,10 @@ public class Problem {
         }
     }
 
+    /**
+     * set IoM
+     * @param intensityOfMutation IoM
+     */
     public void setIntensityOfMutation(double intensityOfMutation){
         if(intensityOfMutation>=0.0&&intensityOfMutation<0.2){
             this.intensityOfMutation=1;
@@ -398,6 +479,10 @@ public class Problem {
         }
     }
 
+    /**
+     * set DoS
+     * @param depthOfSearch DoS
+     */
     public void setDepthOfSearch(double depthOfSearch){
         if(depthOfSearch>=0.0&&depthOfSearch<0.2){
             this.depthOfSearch=1;
@@ -414,16 +499,28 @@ public class Problem {
         }
     }
 
+    /**
+     * get IoM
+     * @return IoM
+     */
     public int getIntensityOfMutation() {
         return intensityOfMutation;
     }
 
+    /**
+     * get DoS
+     * @return DoS
+     */
     public int getDepthOfSearch() {
         return depthOfSearch;
     }
 
+    /**
+     * get the objective value using delta evaluation
+     * @param index index of solution
+     * @return the objective value
+     */
     public double deltaEvaluation(int index) {
-        this.totalEvaluations++;
         double delta=0;
         Instance[] instances=solutions[index].getInstance();
         for(int i=0;i<getNumberOfVariables();i++){
@@ -451,6 +548,12 @@ public class Problem {
         }
     }
 
+    /**
+     * get the array of different genes indices
+     * @param p1 the parent1 index
+     * @param p2 the parent2 index
+     * @return the array of different genes indices
+     */
     public int[] diffGenePoint(int p1,int p2){
         ArrayList<Integer> diff=new ArrayList<>();
         Instance[] ins1=solutions[p1].getInstance();
@@ -466,15 +569,30 @@ public class Problem {
         return diffArray;
     }
 
+    /**
+     * get the last bit of solution
+     * @param index the index of solution
+     * @return the state of last bit
+     */
     public boolean getLastBitOfSolution(int index){
         return getOneBitOfSolution(index,getNumberOfVariables()-1);
     }
 
+    /**
+     * get one bit of solution
+     * @param solutionIndex the index of solution
+     * @return the state of one bit
+     */
     public boolean getOneBitOfSolution(int solutionIndex, int i){
         Instance[] instances=solutions[solutionIndex].getInstance();
         return instances[i].isState();
     }
 
+    /**
+     * get the index of bit with the highest profit
+     * @param index index of solution
+     * @return the index of bit with the highest profit
+     */
     public int getBitWithHighestProfit(int index){
         Instance[] instances=solutions[index].getInstance();
         int bit=random.nextInt(instances.length);
@@ -490,6 +608,11 @@ public class Problem {
         return bit;
     }
 
+    /**
+     * get the index of bit with the highest weight
+     * @param index index of solution
+     * @return the index of bit with the highest weight
+     */
     public int getBitWithHighestWeight(int index){
         Instance[] instances=solutions[index].getInstance();
         int bit=random.nextInt(instances.length);
@@ -505,6 +628,11 @@ public class Problem {
         return bit;
     }
 
+    /**
+     * get the index of bit with the lowest profit
+     * @param index index of solution
+     * @return the index of bit with the lowest profit
+     */
     public int getBitWithLowestProfit(int index){
         Instance[] instances=solutions[index].getInstance();
         int bit=random.nextInt(instances.length);
@@ -520,6 +648,11 @@ public class Problem {
         return bit;
     }
 
+    /**
+     * get the index of bit with the lowest weight
+     * @param index index of solution
+     * @return the index of bit with the lowest weight
+     */
     public int getBitWithLowestWeight(int index){
         Instance[] instances=solutions[index].getInstance();
         int bit=random.nextInt(instances.length);
@@ -535,6 +668,11 @@ public class Problem {
         return bit;
     }
 
+    /**
+     * get the index of bit with the highest profit per weight
+     * @param index index of solution
+     * @return the index of bit with the highest profit per weight
+     */
     public int getBitWithHighestProfitDivWeight(int index){
         Instance[] instances=solutions[index].getInstance();
         int bit=random.nextInt(instances.length);
@@ -553,6 +691,11 @@ public class Problem {
         return bit;
     }
 
+    /**
+     * get the index of bit with the lowest profit per weight
+     * @param index index of solution
+     * @return the index of bit with the lowest profit per weight
+     */
     public int getBitWithLowestProfitDivWeight(int index){
         Instance[] instances=solutions[index].getInstance();
         int bit=random.nextInt(instances.length);
@@ -570,14 +713,27 @@ public class Problem {
         }
         return bit;
     }
+
+    /**
+     * get the random generator
+     * @return the random generator
+     */
     public Random getRandom() {
         return random;
     }
 
+    /**
+     * get whether weight is greater than boundary
+     * @param index the index of solution
+     * @return whether weight is greater than boundary
+     */
     public boolean isOverWeight(int index){
         return getWeight(index)>getBoundary(index);
     }
 
+    /**
+     * the inner class that stores the index and objective value of solution
+     */
     class IndexValue{
         int index;
         double value;

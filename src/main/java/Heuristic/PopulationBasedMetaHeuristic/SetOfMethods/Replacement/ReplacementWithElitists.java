@@ -5,10 +5,26 @@ import Problem.Problem;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
+/**
+ * this class will replace the worst index solution in offspring with
+ * the best index in both parent and child
+ */
 public class ReplacementWithElitists extends Replacement{
+    /**
+     * create object
+     * @param problem problem need to be solved
+     * @param populationSize size of population
+     */
     public ReplacementWithElitists(Problem problem, int populationSize) {
         super(problem,populationSize);
     }
+
+    /**
+     * search the entire generation (both the parent and child) for the worst
+     * and best solution then replace it if the worst solution is in offspring,
+     * then return offspring
+     * @return the offspring
+     */
     protected int[] getNextGeneration() {
 
         // total population size is size of parent population plus size of offspring population

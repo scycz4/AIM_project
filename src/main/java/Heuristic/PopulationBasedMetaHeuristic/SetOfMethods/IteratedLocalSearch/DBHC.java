@@ -1,16 +1,27 @@
 package Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch;
 
-import Heuristic.PopulationBasedMetaHeuristic.PopulationHeuristic;
 import Problem.Problem;
-import de.erichseifert.vectorgraphics2d.eps.EPSProcessor;
 
 import java.util.Random;
 import java.util.stream.IntStream;
 
+/**
+ * this class will search the space according to shuffled index array
+ */
 public abstract class DBHC extends HillClimb {
+    /**
+     * create object
+     * @param problem the problem need to be solved
+     */
     public DBHC(Problem problem){
         super(problem);
     }
+
+    /**
+     * apply the heuristic for DoS times. create a shuffled indices array of items in solution and
+     * search according to the array
+     * @param index the index of solution
+     */
     @Override
     public void applyHeuristic(int index) {
         for(int i=0;i<problem.getDepthOfSearch();i++){
@@ -35,7 +46,12 @@ public abstract class DBHC extends HillClimb {
         }
     }
 
-
+    /**
+     * shuffle the origin array
+     * @param array the origin array
+     * @param random random
+     * @return the shuffled array
+     */
     private int[] shuffle(int[] array, Random random) {
         int[] shuffledArray = new int[array.length];
         System.arraycopy(array, 0, shuffledArray, 0, array.length);

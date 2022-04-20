@@ -1,15 +1,24 @@
 package Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.IteratedLocalSearch;
 
-import Heuristic.PopulationBasedMetaHeuristic.PopulationHeuristic;
 import Problem.Problem;
 
-import java.util.Random;
 
+/**
+ * this class will search the space and move to the best performance solution
+ */
 public abstract class SDHC extends HillClimb {
+    /**
+     * create object
+     * @param problem the problem need to be solved
+     */
     public SDHC(Problem problem) {
         super(problem);
     }
 
+    /**
+     * apply the heuristic for DoS times. search for the entire solution items and flip the bit to get the best objective value
+     * @param index the index of solution
+     */
     @Override
     public void applyHeuristic(int index) {
         for(int k=0;k<problem.getDepthOfSearch();k++){

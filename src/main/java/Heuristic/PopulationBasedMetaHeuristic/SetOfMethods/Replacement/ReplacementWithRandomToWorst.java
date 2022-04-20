@@ -5,11 +5,26 @@ import Problem.Problem;
 import java.util.Random;
 import java.util.stream.IntStream;
 
+/**
+ * this class will replace the worst index solution with
+ * a random index in both parent and child
+ */
 public class ReplacementWithRandomToWorst extends Replacement{
+    /**
+     * create object
+     * @param problem problem need to be solved
+     * @param populationSize size of population
+     */
     public ReplacementWithRandomToWorst(Problem problem, int populationSize) {
         super(problem, populationSize);
     }
 
+    /**
+     * search the entire generation (both the parent and child) for the worst
+     * solution then replace it if the worst solution is in offspring,
+     * then return offspring
+     * @return
+     */
     @Override
     protected int[] getNextGeneration() {
         int totalPopulationSize = populationSize << 1;

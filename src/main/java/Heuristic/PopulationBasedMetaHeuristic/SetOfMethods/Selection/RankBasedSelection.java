@@ -6,13 +6,27 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 
+/**
+ * this class will select parent according to their rank
+ */
 public class RankBasedSelection extends Selection{
     private int populationSize;
+
+    /**
+     * create object
+     * @param problem the problem need to be solved
+     * @param populationSize the size of population
+     */
     public RankBasedSelection(Problem problem, int populationSize) {
         super(problem);
         this.populationSize=populationSize;
     }
 
+    /**
+     * rank the parent ascending by their objective value, and calculate the probability by dividing
+     * current rank by the total sum of rank, then generate a random double to choose the parent
+     * @return the index of parent
+     */
     @Override
     public int applySelection() {
         IndexValue[] indexValues=new IndexValue[populationSize];
@@ -43,6 +57,9 @@ public class RankBasedSelection extends Selection{
         return random.nextInt(populationSize);
     }
 
+    /**
+     * an inner class to store the index of parent and its objective value
+     */
     static class IndexValue{
         private double current;
         private int index;

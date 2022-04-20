@@ -2,14 +2,27 @@ package Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover;
 
 import Problem.Problem;
 
-import java.util.ArrayList;
-import java.util.Random;
-
+/**
+ * this class will exchange the different genes between 0 and random generated point from indices of different genes
+ */
 public class ReducedSurrogateCrossover extends CrossoverHeuristic{
+    /**
+     * create object
+     * @param problem the problem need to be solved
+     */
     public ReducedSurrogateCrossover(Problem problem) {
         super(problem);
     }
 
+    /**
+     * it will apply this heuristic for IoM times, then get the indices of all different genes between
+     * parent1 and parent2, then randomly choose a point from indices, and then exchange all the different bits
+     * between 0 and this point
+     * @param parent1 the parent
+     * @param parent2 the parent
+     * @param child1 the child solution need to be generated
+     * @param child2 the child solution need to be generated
+     */
     @Override
     public void applyHeuristic(int parent1, int parent2, int child1, int child2) {
         problem.copySolution(parent1,child1);
@@ -20,9 +33,9 @@ public class ReducedSurrogateCrossover extends CrossoverHeuristic{
                 return;
             }else{
                 int point=diff[random.nextInt(diff.length)];
-                if(random.nextDouble()<CROSSOVER_PROBABILITY){
+                if(random.nextDouble()< crossoverProbability){
                     for(int j=0;j<point;j++){
-                        problem.exchangeBits(child1,child2,j);
+                        problem.exchangeBits(child1,child2,diff[j]);
 //                        if(problem.isOverWeight(child1)||problem.isOverWeight(child2)){
 //                            problem.exchangeBits(child1,child2,j);
 //                        }
