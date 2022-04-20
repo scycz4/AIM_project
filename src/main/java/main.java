@@ -32,8 +32,8 @@ public class main {
         private final int REPLACEMENT=3;
         private final int SELECTION=3;
 
-        private final double IOM=0.4;
-        private final double DOS=0.8;
+        private final double IOM=0.8;
+        private final double DOS=0.5;
 
         private final double INNOVATION_RATE=0.2;
 

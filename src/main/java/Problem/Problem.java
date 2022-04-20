@@ -23,6 +23,8 @@ public class Problem {
     private int[] memeStates;
 
     private Solution bestEverSolution;
+    private double bestEverSolutionObjectiveValue;
+
 
     private long totalEvaluations;
     private final long MAX_EVALUATIONS;
@@ -73,16 +75,14 @@ public class Problem {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        flippedIndex=new boolean[solutions.length][instances.length];
         for(int i=0;i<solutions.length;i++){
             initializeSolution(i,instances,boundary,false);
-            while(isOverWeight(i)){
-                initializeSolution(i,instances,boundary,false);
-            }
+//            while(isOverWeight(i)){
+//                initializeSolution(i,instances,boundary,false);
+//            }
             currentObjectiveValue[i]=solutions[i].getObjectiveValue();
         }
-        flippedIndex=new boolean[solutions.length][getNumberOfVariables()];
-
 
         greedyHeuristics=new PopulationHeuristic[]{
                 new LargestGreedyHeuristic(this),
@@ -122,15 +122,15 @@ public class Problem {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        flippedIndex=new boolean[solutions.length][instances.length];
         for(int i=0;i<solutions.length;i++){
             initializeSolution(i,instances,boundary,true);
-            while(isOverWeight(i)){
-                initializeSolution(i,instances,boundary,true);
-            }
+//            while(isOverWeight(i)){
+//                initializeSolution(i,instances,boundary,true);
+//            }
             currentObjectiveValue[i]=solutions[i].getObjectiveValue();
         }
-        flippedIndex=new boolean[solutions.length][getNumberOfVariables()];
+
         for(int i=0;i<solutions.length;i++){
             applyGreedyHeuristic(i);
         }
@@ -142,8 +142,9 @@ public class Problem {
         if(bestEverSolution==null){
             throw new NonExistBestSolutionException();
         }
-        if(bestEverSolution.getObjectiveValue()<=getObjectiveFunctionValue(index)){
+        if(bestEverSolutionObjectiveValue<=getObjectiveFunctionValue(index)){
             bestEverSolution=solutions[index].deepCopy();
+            bestEverSolutionObjectiveValue=getObjectiveFunctionValue(index);
         }
     }
 
@@ -158,16 +159,25 @@ public class Problem {
     private void initializeSolution(int i, Instance[] instances, double boundary, boolean reload) {
         this.solutions[i]=new Solution(instances,boundary,numberOfMemes,memeStates);
         Instance[] is=this.solutions[i].deepCopy().getInstance();
+        Random random=new Random();
         for(int j=0;j<instances.length;j++){
-            is[j].setState(new Random().nextBoolean());
+//            is[j].setState(new Random().nextBoolean());
+            if(random.nextDouble()<0.8){
+                is[j].setState(true);
+            }
+            else{
+                is[j].setState(false);
+            }
         }
         this.solutions[i].setInstance(is);
 //        applyGreedyHeuristic(i);
         if(bestEverSolution==null||reload){
             bestEverSolution=this.solutions[i].deepCopy();
+            bestEverSolutionObjectiveValue=getObjectiveFunctionValue(i);
         }
-        if(this.solutions[i].getObjectiveValue()>=bestEverSolution.getObjectiveValue()){
+        if(getObjectiveFunctionValue(i)>=bestEverSolutionObjectiveValue){
             this.bestEverSolution=this.solutions[i].deepCopy();
+            bestEverSolutionObjectiveValue=getObjectiveFunctionValue(i);
         }
     }
 
@@ -236,8 +246,9 @@ public class Problem {
         else{
             value=solutions[index].getObjectiveValue();
         }
-        if(value>bestEverSolution.getObjectiveValue()&&!isOverWeight(index)){
+        if(value>bestEverSolutionObjectiveValue){
             bestEverSolution=solutions[index].deepCopy();
+            bestEverSolutionObjectiveValue=value;
         }
         currentObjectiveValue[index]=solutions[index].getObjectiveValue();
         Arrays.fill(flippedIndex[index],false);
@@ -245,7 +256,7 @@ public class Problem {
     }
 
     public double getBestSolutionValue(){
-        return bestEverSolution.getObjectiveValue();
+        return bestEverSolutionObjectiveValue;
     }
 
     public void bitFlip(int index){
@@ -432,8 +443,9 @@ public class Problem {
             return currentObjectiveValue[index]*(1.0/(4.0*getWeight(index)/getBoundary(index)));
         }
         else{
-            if(currentObjectiveValue[index]>bestEverSolution.getObjectiveValue()){
+            if(currentObjectiveValue[index]>bestEverSolutionObjectiveValue){
                 bestEverSolution=solutions[index].deepCopy();
+                bestEverSolutionObjectiveValue=getObjectiveFunctionValue(index);
             }
             return currentObjectiveValue[index];
         }

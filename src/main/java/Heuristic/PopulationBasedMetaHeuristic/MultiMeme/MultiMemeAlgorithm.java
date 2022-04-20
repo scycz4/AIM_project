@@ -39,7 +39,7 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
     private ArrayList<Double> best=new ArrayList<Double>();
     private ArrayList<Double> worst=new ArrayList<Double>();
 
-    private static final int tSize=3;
+    private static final int tSize=4;
 
     private final int MUTATION=0;
     private final int CROSSOVER=1;

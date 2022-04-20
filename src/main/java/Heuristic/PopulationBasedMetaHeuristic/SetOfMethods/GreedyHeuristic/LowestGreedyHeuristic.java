@@ -16,10 +16,16 @@ public class LowestGreedyHeuristic extends PopulationHeuristic {
         int[] indexes=problem.getSortedLargestProfitIndexArray(index);
 
         for(int i=problem.getNumberOfVariables()-1;i>=0;i--){
+            double current=problem.getObjectiveFunctionValue(index);
             if(!problem.getOneBitOfSolution(index,i)){
                 problem.bitFlip(index,indexes[i]);
                 if(problem.isOverWeight(index)){
-                    problem.bitFlip(index,indexes[i]);
+                    if(problem.deltaEvaluation(index)>current){
+                        continue;
+                    }
+                    else{
+                        problem.bitFlip(index,indexes[i]);
+                    }
                 }
             }
         }

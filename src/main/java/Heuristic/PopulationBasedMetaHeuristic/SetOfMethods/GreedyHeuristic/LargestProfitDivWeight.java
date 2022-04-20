@@ -14,10 +14,16 @@ public class LargestProfitDivWeight extends PopulationHeuristic {
     public void applyHeuristic(int index) {
         int[] indexes=problem.getSortedLargestProfitDivWeightIndexArray(index);
         for(int i=0;i< problem.getNumberOfVariables();i++){
+            double current=problem.getObjectiveFunctionValue(index);
             if(!problem.getOneBitOfSolution(index,i)){
                 problem.bitFlip(index,indexes[i]);
                 if(problem.isOverWeight(index)){
-                    problem.bitFlip(index,indexes[i]);
+                    if(problem.deltaEvaluation(index)>current){
+                        continue;
+                    }
+                    else{
+                        problem.bitFlip(index,indexes[i]);
+                    }
                 }
             }
         }
