@@ -1,7 +1,7 @@
 package Heuristic.PopulationBasedMetaHeuristic.MultiMeme;
 
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Crossover.*;
-import Heuristic.PopulationBasedMetaHeuristic.GeneticAlgorithm.PopulationBasedSearchMethod;
+import Heuristic.PopulationBasedMetaHeuristic.PopulationBasedSearchMethod;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Inheritance.BestInheritanceMethod;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Inheritance.InheritanceMethod;
 import Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Inheritance.SimpleInheritanceMethod;
@@ -39,8 +39,8 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
     private final HillClimb[] hillClimbs;
 
     // contains best and current objective value for each generation
-    private ArrayList<Double> best=new ArrayList<Double>();
-    private ArrayList<Double> worst=new ArrayList<Double>();
+    private ArrayList<Double> best=new ArrayList<>();
+    private ArrayList<Double> worst=new ArrayList<>();
 
     private static final int tSize=4;
 
@@ -191,6 +191,8 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
             applyLocalSearchForChildDependentOnMeme(c2, LOCAL_SEARCH);
 
         }
+        //replace the solution in this generation
+        applyReplacementForChildDependentOnMeme(c1,c2,REPLACEMENT);
 
         //find the best and worst generations in this iteration and add it into arraylist
         double bestObjValue=problem.getObjectiveFunctionValue(0);
@@ -206,9 +208,6 @@ public class MultiMemeAlgorithm extends PopulationBasedSearchMethod {
         }
         best.add(bestObjValue);
         worst.add(worstObjValue);
-
-        //replace the solution in this generation
-        applyReplacementForChildDependentOnMeme(c1,c2,REPLACEMENT);
     }
 
     /**

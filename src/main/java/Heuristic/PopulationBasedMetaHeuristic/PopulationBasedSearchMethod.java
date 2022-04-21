@@ -1,10 +1,10 @@
-package Heuristic.PopulationBasedMetaHeuristic.GeneticAlgorithm;
+package Heuristic.PopulationBasedMetaHeuristic;
 
 import Problem.Problem;
 
 import java.util.Random;
 
-public abstract class PopulationBasedSearchMethod implements SearchMethod{
+public abstract class PopulationBasedSearchMethod implements SearchMethod {
 
     protected final Problem problem;
     protected final Random random;

@@ -2,7 +2,6 @@ package Heuristic.PopulationBasedMetaHeuristic.SetOfMethods.Replacement;
 
 import Problem.Problem;
 
-import java.util.Arrays;
 import java.util.stream.IntStream;
 
 /**

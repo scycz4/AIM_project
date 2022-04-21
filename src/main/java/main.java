@@ -18,8 +18,12 @@ public class main {
         PopulationHeuristicRun populationHeuristicRun=new PopulationHeuristicRun(filename);
         populationHeuristicRun.run();
     }
+
+    /**
+     * this class will run a multi-meme algorithm to solve problem
+     */
     static class PopulationHeuristicRun{
-        private final int TRIAL=10;
+        private final int TRIAL=5;
         private final int POP_SIZE=16;
         private final int NUM_OF_MEMES=6;
 
@@ -35,7 +39,7 @@ public class main {
 
         private final double INNOVATION_RATE=0.2;
 
-        private final int GENERATION=2500;
+        private final int GENERATION=150;
 
         private String filename;
 
@@ -45,11 +49,18 @@ public class main {
 
         private Random random;
 
+        /**
+         * create runner
+         * @param filename the file need to be loaded
+         */
         public PopulationHeuristicRun(String filename){
             this.filename=filename;
-            this.random=new Random(1000);
+            this.random=new Random();
         }
 
+        /**
+         * run the program
+         */
         public void run(){
             long time=System.nanoTime();
             for(int trial=0;trial<TRIAL;trial++){
@@ -76,8 +87,14 @@ public class main {
                 this.writeFile(trial);
             }
             System.out.println((double)(System.nanoTime()-time)/1000000000);
+
+
         }
 
+        /**
+         * write the best and worst result of all generations into file
+         * @param trial the current trial
+         */
         private void writeFile(int trial) {
 
             String inputFilename= problem.getFilename();
