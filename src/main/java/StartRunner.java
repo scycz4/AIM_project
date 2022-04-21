@@ -8,7 +8,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 
-public class main {
+public class StartRunner {
     public static void main(String[] args){
 
         System.out.print("please enter the file name you want to load:");
