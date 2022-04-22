@@ -62,7 +62,6 @@ public class StartRunner {
          * run the program
          */
         public void run(){
-            long time=System.nanoTime();
             for(int trial=0;trial<TRIAL;trial++){
                 System.out.println("Trial#"+(trial+1));
                 //muation, ruin-recreate, crossover, localsearch, inheritance, replacement, selection
@@ -86,7 +85,6 @@ public class StartRunner {
 
                 this.writeFile(trial);
             }
-            System.out.println((double)(System.nanoTime()-time)/1000000000);
 
 
         }
